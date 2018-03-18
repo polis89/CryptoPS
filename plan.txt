@@ -9,3 +9,8 @@
 3. Examples of exploits.
 Ich wuerde vorschlgen 4-6 Beispiele us dieses Buch zu nehmen:
 "24 Deadly Sins of Software Security"
+zB:
+- (Stack, Heap) Buffer Overflow
+- SQL Injection
+- Cross Site Scripting
+etc.
