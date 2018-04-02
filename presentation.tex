@@ -54,11 +54,32 @@
 %----------------------------------------------------------------------------------------
 
 \section{Exploits}
+
+\begin{frame}[fragile]{Code Injection}
+  Code Injection ist das ausnutzen von Bugs durch Eingabe von ungewollten Parametern, um dadurch die Ausf\"urung zu ver\"andern.
+  \newline
+  Kann folgende Auswirkungen haben:
+  \begin{itemize}
+    \item Daten in SQL Tabellen verändern
+    \item Installieren von Malware durch Server-Scripting Code zB. PHP
+    \item Root Privilegien bekommen, durch Shell Injection oder Windows Service
+    \item Angtiff auf Web User durch Cross-Site-Scripting in HTML/JS
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Code Injection - Masnahmen}
+  Kann erschwert werden durch:
+  \begin{itemize}
+    \item API's benutzen, die sicher gegen\"uber allen Symbolen sind, indem der Eingabestring compiliert und gefiltert wird.
+    \item Whitelisting von erw\"unschten Parametern
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{SQL Injection}
   test frame
 \end{frame}
 
-\begin{frame}[fragile]{Code Injection}
+\begin{frame}[fragile]{Cross Site Scripting}
   test frame
 \end{frame}
 
@@ -67,10 +88,6 @@
 \end{frame}
 
 \begin{frame}[fragile]{Format String}
-  test frame
-\end{frame}
-
-\begin{frame}[fragile]{Cross Site Scripting}
   test frame
 \end{frame}
 
