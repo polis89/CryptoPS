@@ -16,6 +16,30 @@
 \graphicspath{ {pics/} }
 
 \usepackage{listings}
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    %breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -105,9 +129,9 @@
   Beispiel: Suchfunktion.
   \lstset{language=html, basicstyle=\tiny}
   \begin{lstlisting}
-  http://example.com/?suche=Suchbegriff
-  http://example.com/?suche=<script type="text/javascript">alert("XSS")</script>
-  <p>Sie suchten nach: <script type="text/javascript">alert("XSS")</script></p>
+    http://example.com/?suche=Suchbegriff
+    http://example.com/?suche=<script type="text/javascript">alert("XSS")</script>
+    <p>Sie suchten nach: <script type="text/javascript">alert("XSS")</script></p>
   \end{lstlisting}
   Ausgenutzt wird das dynamisch generierte Websiten ihren Ihnalt an \"ubergebene Eingabewerte anpassen, durch HTTP-GET und HTTP-POST.
   Dieser Typ heisst auch nicht-persistent, da der Schadcode nur tempr\"ar bei der jeweiligen Generierung der Website eingeschleust wird.
@@ -119,7 +143,7 @@
   Beispiel Posting auf Website:
   \lstset{language=html, basicstyle=\tiny}
   \begin{lstlisting}
-  Eine sehr gutes Produkt!<script type="text/javascript">alert("XSS")</script>
+    Eine sehr gutes Produkt!<script type="text/javascript">alert("XSS")</script>
   \end{lstlisting}
 \end{frame}
 
@@ -151,6 +175,33 @@
 \begin{frame}[fragile]{Buffer Overflows}
   test frame
 \end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows - Type-Safe Sprachen}
+  Compiler stellt Typsicherheit her, indem Datentypen gepr\"uft werden, damit keine Typverletzungen entstehen.
+  Wenn Typverletzungen sp\"atestens zur Laufzeit erkannt werden, spricht man von Typsicheren Programmiersprachen.
+  
+  Beispiel String in Python, es reicht der Variable einen String zuzuweisen.
+  %\lstset{language=python}
+  \begin{lstlisting}[style=CStyle]
+    mystring = "This is my string"
+  \end{lstlisting}
+  
+  Beispiel in C, es muss der Typ deklariert und auch der Speicher manuell reserviert werden.
+  \begin{lstlisting}[style=CStyle]
+    char mystring[20] = "This is my string";
+  \end{lstlisting}
+  Wenn man in C nun einen 30 Byte String zuweist entsteht eine Overflow Situation.
+\end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows - Schutzma{\ss}nahmen}
+  \begin{itemize}
+    \item Type-Safe Programmiersprachen verwenden, welche Memory Management zB Java, Python, Ruby,...
+    \item \"Uberpr\"ufen auf Overflows bei User Eingaben
+    \item in C sichere Methoden verwenden, \textit{get\_s} anstatt \textit{get}. 
+  \end{itemize}
+\end{frame}
+
+
 
 %----------------------------------------------------------------------------------------
 %	OPEN SOURCE UND PROPERTÄRE SOFTWARE
