@@ -12,6 +12,11 @@
 \usepackage{xspace}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
+\usepackage{graphicx}
+\graphicspath{ {pics/} }
+
+\usepackage{listings}
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -76,14 +81,66 @@
 \end{frame}
 
 \begin{frame}[fragile]{SQL Injection}
-  test frame
+  Ausnutzen von Sicherheitsl\"ucken in Zusammenhang mit SQL-Datenbanken.
+  Ziele:
+  \begin{itemize}
+    \item Daten auszusp\"ahen oder zu ver\"andern
+    \item Kontrolle \"uber Server zu erhalten
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{SQL Injection - Beispiel}
+  Es wird zus\"atzlicher Code bei Aufruf eingeschleust, der die Bentzertabelle modifiziert.
+  \newline
+  \includegraphics[scale=0.5]{sql_injection_1}
 \end{frame}
 
 \begin{frame}[fragile]{Cross Site Scripting}
   test frame
 \end{frame}
 
+\begin{frame}[fragile]{Cross Site Scripting - reflektierte Angriffe}
+  Eine Benutzereingabe wird direkt vom Server wieder zur\"uck gesendet.
+  Wenn diese Eingabe Scriptcode enth\"alt, die vom Browser des Nutzers interpretiert wird, kann dorrt Schadcode ausgef\"urt werden.
+  Beispiel: Suchfunktion.
+  \lstset{language=html, basicstyle=\tiny}
+  \begin{lstlisting}
+  http://example.com/?suche=Suchbegriff
+  http://example.com/?suche=<script type="text/javascript">alert("XSS")</script>
+  <p>Sie suchten nach: <script type="text/javascript">alert("XSS")</script></p>
+  \end{lstlisting}
+  Ausgenutzt wird das dynamisch generierte Websiten ihren Ihnalt an \"ubergebene Eingabewerte anpassen, durch HTTP-GET und HTTP-POST.
+  Dieser Typ heisst auch nicht-persistent, da der Schadcode nur tempr\"ar bei der jeweiligen Generierung der Website eingeschleust wird.
+\end{frame}
+
+\begin{frame}[fragile]{Cross Site Scripting - persistente Angriffe}
+  Unterscheidet sich von reflektierenden Angriffen nur dadurch, dass der Schadcode auf dem Server gespeichert wird, wodurch er bei jeder Anfrage asugef\"urt wird.
+  Ist bei Webanwendungen m\"oglich, die Benutzereingaben serverseitig ohne Pr\"ufung speichern und diese sp\"ater wieder ausliefert.
+  Beispiel Posting auf Website:
+  \lstset{language=html, basicstyle=\tiny}
+  \begin{lstlisting}
+  Eine sehr gutes Produkt!<script type="text/javascript">alert("XSS")</script>
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Cross Site Scripting - DOM-basierte Angriffe}
+  Webapplikation auf dem Server ist hier nicht beteiligt, wird auch lokales XSS genannt.
+  Somit auch statische HTML Seiten mit JavaScript unterst\"utzung anf\"llig f\"ur diesen Angriff.
+\end{frame}
+
+\begin{frame}[fragile]{Cross Site Scripting - Schutzma{\ss}nahmen}
+  \begin{itemize}
+    \item Anstatt Blacklist mit b\"sen Eingaben zu f\"uhren, besser Whitelist mit buten Eingaben. Da die Anzahl der Angriffmethoden nicht bekannt ist.
+    \item HTML-Metazeichen durch Zeichenreferenzen ersetzen, damit sie als normale Zeichen behandelt werden
+    \item Sicher programmierte Anwendung sind Web Apllication Firewalls (WAF) vorzuziehen.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Directory Traversal Attack}
+  Ein HTTP Angriff, bei dem ein Angreifer zugriff auf gesperrte Verzeichnisse gewinnt und Code auserhalb des root Verzeichnisses ausf\"uhrt.
+\end{frame}
+
+\begin{frame}[fragile]{Directory Traversal Attack - Schutzma{\ss}nahmen}
   test frame
 \end{frame}
 
