@@ -172,6 +172,10 @@
   test frame
 \end{frame}
 
+\begin{frame}[fragile]{Format String - Schutzma{\ss}nahmen}
+  test frame
+\end{frame}
+
 \begin{frame}[fragile]{Buffer Overflows}
   test frame
 \end{frame}
@@ -214,5 +218,33 @@
 %----------------------------------------------------------------------------------------
 
 \section{Firmware Security}
+\begin{frame}[fragile]{Spezialfall Firmware}
+  \begin{itemize}
+    \item Ger\"at wurde bereits verkauft, kein Interesse des Herstellers an Updates
+    \item Zu viele verschiedene Ger\"ate - Unm\"oglicher Verwaltungsaufwand
+      \begin{itemize}
+        \item Alleine Samsung hat bis 2014 56 verscheidene Smartphones pro Jahr herausgebracht
+      \end{itemize}
+    \item Firmware agiert in Schicht unter Betriebssystem - Angriffe k\"onnen vom Benutzer nicht erkannt oder verhindert werden
+    \item Firmware meist Closed Source - keine Weiterentwicklung der Community
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Sicherheitsl\"ucken in Firmware - Beispiele}
+  \begin{itemize}
+    \item BadUSB - Eingabeger\"ate, USB-Sticks, Speichermedien, Kameras, ...
+    \item Intel ME - Betriebssystem im Prozessor (AMD PSP)
+      \begin{itemize}
+        \item Funktionsweise undokumentiert
+        \item Kritische L\"ucke 2017 entdeckt
+        \item NSA und Google haben Intel ME abgeschaltet auf ihren Ger\"aten
+      \end{itemize}
+    \item Android
+      \begin{itemize}
+        \item praktisch alle Android Ger\"ate ohne Sicherheitupdates
+      \end{itemize}
+    \item Router, Smart TV's, IoT-Devices - Millionen angreifbare Ger\"ate in Haushalten, Firmen und Beh\"orden
+  \end{itemize}
+\end{frame}
 
 \end{document}
