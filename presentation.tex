@@ -32,7 +32,7 @@
     %breaklines=true,                 
     captionpos=b,                    
     keepspaces=true,                 
-    numbers=left,                    
+    %numbers=left,                    
     numbersep=5pt,                  
     showspaces=false,                
     showstringspaces=false,
@@ -49,7 +49,7 @@
 \subtitle{Kryptographie und IT Sicherheit SS 2018}
 % \date{\today}
 \date{}
-\author{Dmitrii Polianski, Manuel Klappacher}
+\author{Dmitrii Polianskii, Manuel Klappacher}
 \institute{Universit\"at Salzburg}
 % \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
 
@@ -69,7 +69,7 @@
 \section{Einleitung}
 
 \begin{frame}[fragile]{Einleitung}
-  Wie entstehen Sicherheitsl\"cken?
+  Wie entstehen Sicherheitsl\"ucken?
   \begin{itemize}
     \item Programmierfehler
       \begin{itemize}
@@ -86,7 +86,7 @@
     \item Absichtlich platzierte Backdoors
       \begin{itemize}
         \item Sehr schwer nachzuweisen - wie Unterscheidet man Fehler von b\"oswilliger Absicht?
-        \item Werden acuh von anderen Teilnehmern entdeckt und von Kriminellen dann f\"ur ihre Zwecke missbraucht
+        \item Werden auch von anderen Teilnehmern entdeckt und von Kriminellen dann f\"ur ihre Zwecke missbraucht
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -96,6 +96,15 @@
 %----------------------------------------------------------------------------------------
 
 \section{Remote and Lokale Gefahren}
+
+\begin{frame}[fragile]{Einleitung - Statistiken}
+  Most commonly exploited applications worldwide as of 3rd quarter 2017
+  \newline
+  \includegraphics[scale=0.5]{cyberattacks_2017}
+  \newline
+  Quelle: www.statista.com
+\end{frame}
+
 
 %----------------------------------------------------------------------------------------
 %	EXPLOITS
@@ -168,12 +177,12 @@
 
 \begin{frame}[fragile]{Cross Site Scripting - DOM-basierte Angriffe}
   Webapplikation auf dem Server ist hier nicht beteiligt, wird auch lokales XSS genannt.
-  Somit auch statische HTML Seiten mit JavaScript unterst\"utzung anf\"llig f\"ur diesen Angriff.
+  Somit auch statische HTML Seiten mit JavaScript unterst\"utzung anf\"allig f\"ur diesen Angriff.
 \end{frame}
 
 \begin{frame}[fragile]{Cross Site Scripting - Schutzma{\ss}nahmen}
   \begin{itemize}
-    \item Anstatt Blacklist mit b\"sen Eingaben zu f\"uhren, besser Whitelist mit buten Eingaben. Da die Anzahl der Angriffmethoden nicht bekannt ist.
+    \item Anstatt Blacklist mit b\"osen Eingaben zu f\"uhren, besser Whitelist mit buten Eingaben. Da die Anzahl der Angriffmethoden nicht bekannt ist.
     \item HTML-Metazeichen durch Zeichenreferenzen ersetzen, damit sie als normale Zeichen behandelt werden
     \item Sicher programmierte Anwendung sind Web Apllication Firewalls (WAF) vorzuziehen.
   \end{itemize}
@@ -224,13 +233,20 @@
   \end{itemize}
 \end{frame}
 
-
-
 %----------------------------------------------------------------------------------------
 %	OPEN SOURCE UND PROPERTÄRE SOFTWARE
 %----------------------------------------------------------------------------------------
 
 \section{Open Source und Propert\"are Software}
+
+\begin{frame}[fragile]{Open Source Vorteile}
+  \begin{itemize}
+    \item Programmcode kann \"uberpr\"uft werden, Sicherheitsl\"ucken fallen leichter auf
+    \item Erschwert implementierung von Backdoors
+    \item Software kann von der Communtiy weiterentwickelt oder geforkt werden
+    \item Bestimmte Funktionen k\"onnen abgedreht werden
+  \end{itemize}
+\end{frame}
 
 %----------------------------------------------------------------------------------------
 %	FIRMWARE SECURITY
