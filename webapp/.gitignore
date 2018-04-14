@@ -1,0 +1,10 @@
+/node_modules/
+/dist/
+/libs/
+/app/libs/
+/.git/
+/app/css/
+/**/*.psd
+/**/Thumbs.db
+/**/*.DS_Store
+/app/index.html
