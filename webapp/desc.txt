@@ -1,0 +1,41 @@
+1. //Login in MySQL
+mysql -u root -p 
+
+2. //Make DB
+CREATE DATABASE crypto_db;
+
+3.  
+// specify your	 mysql username and passwd in login.php and init_db.php
+// $username = "";
+// $password = "";
+
+4. //create table and add user in it
+// a) With php-script
+cd ./webapp/
+php init_db.php
+
+// b) manuell
+	//Check DB
+	USE events;
+
+	//Create DB
+	CREATE TABLE users (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), passwd VARCHAR(30));
+
+	//Add admin
+	INSERT INTO `users` (`id`,`name`,`passwd`) VALUES (NULL, "admin", "admin123");
+
+	//To check DB
+	SELECT * FROM potluck;
+
+5. // Start WebServer in ./webapp/
+php -S localhost:8000 
+
+//Now here must be an app http://localhost:8000/
+//Try to login with login=admin and password=admin123
+
+//SQL INJECTION:
+TYPE
+random' OR 0=0 -- 
+!!with space on the end!!
+in name field and nothing in passwd 
+
