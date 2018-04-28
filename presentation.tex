@@ -22,23 +22,42 @@
 \definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
 
 \lstdefinestyle{CStyle}{
-    backgroundcolor=\color{backgroundColour},   
+    backgroundcolor=\color{backgroundColour},
     commentstyle=\color{mGreen},
     keywordstyle=\color{magenta},
     numberstyle=\tiny\color{mGray},
     stringstyle=\color{mPurple},
     basicstyle=\footnotesize,
-    breakatwhitespace=false,         
-    %breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    %numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
+    breakatwhitespace=false,
+    %breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    %numbers=left,
+    numbersep=5pt,
+    showspaces=false,
     showstringspaces=false,
-    showtabs=false,                  
+    showtabs=false,
     tabsize=2,
     language=C
+}
+
+\lstdefinestyle{HTMLStyle}{
+    backgroundcolor=\color{backgroundColour},
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\tiny,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=HTML
 }
 
 %----------------------------------------------------------------------------------------
@@ -117,7 +136,7 @@
   \newline
   Kann folgende Auswirkungen haben:
   \begin{itemize}
-    \item Daten in SQL Tabellen verändern
+    \item Daten in SQL Tabellen ver\"andern
     \item Installieren von Malware durch Server-Scripting Code zB. PHP
     \item Root Privilegien bekommen, durch Shell Injection oder Windows Service
     \item Angtiff auf Web User durch Cross-Site-Scripting in HTML/JS
@@ -142,24 +161,35 @@
 \end{frame}
 
 \begin{frame}[fragile]{SQL Injection - Beispiel}
-  Es wird zus\"atzlicher Code bei Aufruf eingeschleust, der die Bentzertabelle modifiziert.
+  Es wird zus\"atzlicher Code bei Aufruf eingeschleust, der die Benutzertabelle modifiziert.
   \newline
   \includegraphics[scale=0.5]{sql_injection_1}
 \end{frame}
 
-\begin{frame}[fragile]{Cross Site Scripting}
-  test frame
+\begin{frame}[fragile]{Cross Site Scripting - XSS}
+  Bei Cross-Site Scripting (XSS) werden Sicherheitsl\"ucken in Webanwendungen ausgenutzt um schadhaften Code in sonst vertrauensw\"urdigen Websiten einzubinden.
+  Das ist der Fall wenn es nicht Vertrauensw\"urdigen Dritten erlaubt ist, Daten und Code hochzuladen.
+  \newline
+  Ziele:
+  \begin{itemize}
+    \item Benutzerkonten zu \"ubernehmen
+    \item Daten (Identit\"atsdiebstahl)
+  \end{itemize}
+  Der Browser des Benutzers kann nicht zwischen sch\"adlichem und gew\"unschtem Code unterscheiden.
 \end{frame}
 
 \begin{frame}[fragile]{Cross Site Scripting - reflektierte Angriffe}
   Eine Benutzereingabe wird direkt vom Server wieder zur\"uck gesendet.
-  Wenn diese Eingabe Scriptcode enth\"alt, die vom Browser des Nutzers interpretiert wird, kann dorrt Schadcode ausgef\"urt werden.
+  Wenn diese Eingabe Scriptcode enth\"alt, die vom Browser des Nutzers interpretiert wird, kann dort Schadcode ausgef\"urt werden.
   Beispiel: Suchfunktion.
-  \lstset{language=html, basicstyle=\tiny}
-  \begin{lstlisting}
+  \begin{lstlisting}[style=CStyle]
     http://example.com/?suche=Suchbegriff
-    http://example.com/?suche=<script type="text/javascript">alert("XSS")</script>
-    <p>Sie suchten nach: <script type="text/javascript">alert("XSS")</script></p>
+
+    http://example.com/?suche=<script type=
+          "text/javascript">alert("XSS")</script>
+
+    <p>Sie suchten nach: <script type=
+          "text/javascript">alert("XSS")</script></p>
   \end{lstlisting}
   Ausgenutzt wird das dynamisch generierte Websiten ihren Ihnalt an \"ubergebene Eingabewerte anpassen, durch HTTP-GET und HTTP-POST.
   Dieser Typ heisst auch nicht-persistent, da der Schadcode nur tempr\"ar bei der jeweiligen Generierung der Website eingeschleust wird.
@@ -169,9 +199,9 @@
   Unterscheidet sich von reflektierenden Angriffen nur dadurch, dass der Schadcode auf dem Server gespeichert wird, wodurch er bei jeder Anfrage asugef\"urt wird.
   Ist bei Webanwendungen m\"oglich, die Benutzereingaben serverseitig ohne Pr\"ufung speichern und diese sp\"ater wieder ausliefert.
   Beispiel Posting auf Website:
-  \lstset{language=html, basicstyle=\tiny}
-  \begin{lstlisting}
-    Eine sehr gutes Produkt!<script type="text/javascript">alert("XSS")</script>
+  \begin{lstlisting}[style=CStyle]
+    Eine sehr gutes Produkt!<script type=
+          "text/javascript">alert("XSS")</script>
   \end{lstlisting}
 \end{frame}
 
@@ -205,19 +235,44 @@
 \end{frame}
 
 \begin{frame}[fragile]{Buffer Overflows}
-  test frame
+  Durch Programmfehler werden zu gro{\ss}e Datenmengen in einen zu klein reservierten Speicherbereich geschrieben.
+  (Buffer oder Stack, auch Pointer).
+  \newline
+  \newline
+  $\rightarrow$ Daten werden \"uberschrieben:
+  \begin{itemize}
+    \item Schadcode wird ausgef\"uhrt
+    \item Absturz des Programms
+    \item Besch\"adigung oder Verf\"alschung von Daten
+  \end{itemize}
+  Zum Beispiel die R\"ucksprungadresse eines Unterprogrammes wird \"uberschrieben.
+\end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows}
+  Beg\"unstigt durch Van Neumann Architektur, Daten und Programm im selben Speicher.
+  \begin{itemize}
+    \item Compilierte und assemblierte Sprachen anf\"allig
+    \item Anf\"allige Sprachen, z.B. C/C++
+    \item Unsichere Libraries in C/C++
+    \item Programmierer \"uberpr\"ufen Grenzen nicht
+  \end{itemize}
+  Schutzma{\ss}nahmen:
+  \begin{itemize}
+    \item Type-Safe Programmiersprachen verwenden, welche Memory Management zB Java, Python, Ruby,...
+    \item \"Uberpr\"ufen auf Overflows bei User Eingaben
+    \item in C sichere Methoden verwenden, \textit{get\_s} anstatt \textit{get}.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Buffer Overflows - Type-Safe Sprachen}
   Compiler stellt Typsicherheit her, indem Datentypen gepr\"uft werden, damit keine Typverletzungen entstehen.
   Wenn Typverletzungen sp\"atestens zur Laufzeit erkannt werden, spricht man von Typsicheren Programmiersprachen.
-  
+
   Beispiel String in Python, es reicht der Variable einen String zuzuweisen.
-  %\lstset{language=python}
   \begin{lstlisting}[style=CStyle]
     mystring = "This is my string"
   \end{lstlisting}
-  
+
   Beispiel in C, es muss der Typ deklariert und auch der Speicher manuell reserviert werden.
   \begin{lstlisting}[style=CStyle]
     char mystring[20] = "This is my string";
@@ -225,14 +280,40 @@
   Wenn man in C nun einen 30 Byte String zuweist entsteht eine Overflow Situation.
 \end{frame}
 
-\begin{frame}[fragile]{Buffer Overflows - Schutzma{\ss}nahmen}
-  \begin{itemize}
-    \item Type-Safe Programmiersprachen verwenden, welche Memory Management zB Java, Python, Ruby,...
-    \item \"Uberpr\"ufen auf Overflows bei User Eingaben
-    \item in C sichere Methoden verwenden, \textit{get\_s} anstatt \textit{get}. 
-  \end{itemize}
+\begin{frame}[fragile]{Buffer Overflows - Stack Overflow}
+ Die R\"ucksprungadresse eines Unterprogramms und dessen lokale Variablen werden auf einen als Stack bezeichneten Bereich zu gelegt.
+ \begin{lstlisting}[style=CStyle]
+  void input_line()
+  {
+    char line[1000];
+    if (gets(line))
+      puts(line);
+    }
+ \end{lstlisting}
+
+ \begin{figure}%
+  \centering
+  {\includegraphics[scale=0.10]{stackoverflow}}%
+  \quad
+  {\includegraphics[scale=0.10]{stackoverflow_2}}%
+ \end{figure}
 \end{frame}
 
+\begin{frame}[fragile]{Buffer Overflows - Compiler Ma{\ss}nahmen}
+  Moderne Compiler wie neue Versionen des GNU C-Compilers erlauben die Aktivierung von \"Uberprüfungscode-Erzeugung bei der \"Ubersetzung.
+
+  \begin{itemize}
+    \item Zufallsvariable erstellt und \"uberpr\"uft, bei Ver\"anderung wurde auch die RA \"uberschrieben.
+    \item Kopie der R\"ucksprungadresse wird unterhalb lokaler Variablen abgelegt.
+  \end{itemize}
+
+  \begin{figure}%
+   \centering
+   {\includegraphics[scale=0.10]{stackgcc_1}}%
+   \quad
+   {\includegraphics[scale=0.10]{stackgcc_2}}%
+  \end{figure}
+\end{frame}
 %----------------------------------------------------------------------------------------
 %	OPEN SOURCE UND PROPERTÄRE SOFTWARE
 %----------------------------------------------------------------------------------------
