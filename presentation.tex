@@ -87,8 +87,7 @@
 
 \section{Einleitung}
 
-\begin{frame}[fragile]{Einleitung}
-  Wie entstehen Sicherheitsl\"ucken?
+\begin{frame}[fragile]{Wie entstehen Fehler und Sicherheitsl\"ucken?}
   \begin{itemize}
     \item Programmierfehler
       \begin{itemize}
@@ -106,6 +105,11 @@
       \begin{itemize}
         \item Sehr schwer nachzuweisen - wie Unterscheidet man Fehler von b\"oswilliger Absicht?
         \item Werden auch von anderen Teilnehmern entdeckt und von Kriminellen dann f\"ur ihre Zwecke missbraucht
+      \end{itemize}
+    \item Zuviel Komplexit\"at
+      \begin{itemize}
+        \item Komplexe Systeme kann keiner mehr \"uberblicken
+        \item Auf zu komplexe Systeme wird noch mehr Komplexit\"at gestapelt, die wieder eigene Fehler hat - Virenscanner, Hardwareschutz
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -254,7 +258,7 @@
     \item Compilierte und assemblierte Sprachen anf\"allig
     \item Anf\"allige Sprachen, z.B. C/C++
     \item Unsichere Libraries in C/C++
-    \item Programmierer \"uberpr\"ufen Grenzen nicht
+    \item Unsicheres Behandeln von Stirngs und Arraygr\"o{\ss}en
   \end{itemize}
   Schutzma{\ss}nahmen:
   \begin{itemize}
@@ -288,7 +292,7 @@
     char line[1000];
     if (gets(line))
       puts(line);
-    }
+  }
  \end{lstlisting}
 
  \begin{figure}%
@@ -300,7 +304,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Buffer Overflows - Compiler Ma{\ss}nahmen}
-  Moderne Compiler wie neue Versionen des GNU C-Compilers erlauben die Aktivierung von \"Uberprüfungscode-Erzeugung bei der \"Ubersetzung.
+  Moderne Compiler wie neue Versionen des GNU C-Compilers erlauben die Aktivierung von \"Uberpr\"ufungscode-Erzeugung bei der \"Ubersetzung.
 
   \begin{itemize}
     \item Zufallsvariable erstellt und \"uberpr\"uft, bei Ver\"anderung wurde auch die RA \"uberschrieben.
@@ -314,6 +318,37 @@
    {\includegraphics[scale=0.10]{stackgcc_2}}%
   \end{figure}
 \end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows - Programmbeispiel}
+  reserved frame
+\end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows - Heap Overflows}
+  Ist ein Buffer Overflow, der im Heap Bereich stattfindet.
+  \begin{itemize}
+    \item Daten werden zur Laufzeit gespeichert (malloc)
+    \item Kein Limit, ausser RAM Gr\"o{\ss}e
+    \item in iOS Jailbreaks verwenden Heap Overflows um Code in den Kernel zu injizieren
+  \end{itemize}
+  Gegenma{\ss}nahmen:
+  \begin{itemize}
+    \item Code und Daten trennen mit Prozessoren - NX-bit - No Execute Bit
+    \item Betriebssysteme mit ASLR - Address Space Layout Randomization
+    \item Checks im Heap Manager
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Integer Overflows}
+  Entstehen wenn Operationen auf Integer die maximale Gr\"o{\ss}e \"uberschreiten. z.B. arithemetische oder cast Operationen.
+  \begin{itemize}
+    \item testen ob Maximaler Wert \"uberschritten ist
+    \item Typen beachten, signed unsigned
+    \item muss von Hand gemacht werden, keine nativen Methoden in Programmiersprachen
+    \item in Java BigInt verwenden
+  \end{itemize}
+  \includegraphics[scale=0.25]{integer_overflow}
+\end{frame}
+
 %----------------------------------------------------------------------------------------
 %	OPEN SOURCE UND PROPERTÄRE SOFTWARE
 %----------------------------------------------------------------------------------------
@@ -368,5 +403,14 @@
   \newline
 \end{frame}
 
+\begin{frame}[fragile]{Quellen}
+  \begin{itemize}
+    \item Wikipedia
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{}
+  \huge Vielen Dank f\"ur ihre Aufmerksamkeit!
+\end{frame}
 
 \end{document}
