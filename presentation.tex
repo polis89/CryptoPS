@@ -93,6 +93,10 @@
 \author{Dmitrii Polianskii, Manuel Klappacher}
 \institute{Universit\"at Salzburg}
 % \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{subsection in toc}[subsections numbered]
 
 \begin{document}
 
@@ -100,7 +104,7 @@
 
 \begin{frame}{Themen}
   \setbeamertemplate{section in toc}[sections numbered]
-  \tableofcontents[hideallsubsections]
+  \tableofcontents
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -136,12 +140,6 @@
   \end{itemize}
 \end{frame}
 
-%----------------------------------------------------------------------------------------
-%	REMOTE AND LOCAL THREATS
-%----------------------------------------------------------------------------------------
-
-\section{Remote and Lokale Gefahren}
-
 \begin{frame}[fragile]{Einleitung - Statistiken}
   Most commonly exploited applications worldwide as of 3rd quarter 2017
   \newline
@@ -150,6 +148,56 @@
   Quelle: www.statista.com
 \end{frame}
 
+%----------------------------------------------------------------------------------------
+%	OPEN SOURCE UND PROPERTÄRE SOFTWARE
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]{Open Source Vorteile}
+  \begin{itemize}
+    \item Programmcode kann \"uberpr\"uft werden, Sicherheitsl\"ucken fallen leichter auf
+    \item Erschwert implementierung von Backdoors
+    \item Software kann von der Communtiy weiterentwickelt oder geforkt werden
+    \item Bestimmte Funktionen k\"onnen abgedreht werden
+  \end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	FIRMWARE SECURITY
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]{Spezialfall Firmware}
+  \begin{itemize}
+    \item Ger\"at wurde bereits verkauft, kein Interesse des Herstellers an Updates
+    \item Zu viele verschiedene Ger\"ate - Unm\"oglicher Verwaltungsaufwand
+      \begin{itemize}
+        \item Alleine Samsung hat bis 2014 56 verscheidene Smartphones pro Jahr herausgebracht
+      \end{itemize}
+    \item Firmware agiert in Schicht unter Betriebssystem - Angriffe k\"onnen vom Benutzer nicht erkannt oder verhindert werden
+    \item Firmware meist Closed Source - keine Weiterentwicklung der Community
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Sicherheitsl\"ucken in Firmware - Beispiele}
+  \begin{itemize}
+    \item BadUSB - Eingabeger\"ate, USB-Sticks, Speichermedien, Kameras, ...
+    \item Intel ME - Betriebssystem im Prozessor (AMD PSP)
+      \begin{itemize}
+        \item Funktionsweise undokumentiert
+        \item Kritische L\"ucke 2017 entdeckt
+        \item NSA und Google haben Intel ME abgeschaltet auf ihren Ger\"aten
+      \end{itemize}
+    \item Android
+      \begin{itemize}
+        \item praktisch alle Android Ger\"ate ohne Sicherheitupdates
+      \end{itemize}
+    \item Router, Smart TV's, IoT-Devices - Millionen angreifbare Ger\"ate in Haushalten, Firmen und Beh\"orden
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Smartphones Sicherheitsupdates}
+  \includegraphics[scale=0.5]{android_sub}
+  \newline
+\end{frame}
 
 %----------------------------------------------------------------------------------------
 %	EXPLOITS
@@ -177,6 +225,12 @@
   \end{itemize}
 \end{frame}
 
+%----------------------------------------------------------------------------------------
+%	SQL INJECTION
+%----------------------------------------------------------------------------------------
+
+\subsection{SQL Injection}
+
 \begin{frame}[fragile]{SQL Injection}
   Ausnutzen von Sicherheitsl\"ucken in Zusammenhang mit SQL-Datenbanken.
   Ziele:
@@ -191,6 +245,12 @@
   \newline
   \includegraphics[scale=0.5]{sql_injection_1}
 \end{frame}
+
+%----------------------------------------------------------------------------------------
+%	CROSS SITE SCRIPTING
+%----------------------------------------------------------------------------------------
+
+\subsection{Cross Site Scripting}
 
 \begin{frame}[fragile]{Cross Site Scripting - XSS}
   Bei Cross-Site Scripting (XSS) werden Sicherheitsl\"ucken in Webanwendungen ausgenutzt um schadhaften Code in sonst vertrauensw\"urdigen Websiten einzubinden.
@@ -244,6 +304,12 @@
   \end{itemize}
 \end{frame}
 
+%----------------------------------------------------------------------------------------
+%	PATH TRAVERSAL ATTACK
+%----------------------------------------------------------------------------------------
+
+\subsection{Path Traversal Attack}
+
 \begin{frame}[fragile]{Path Traversal Attack}
   Ein HTTP Angriff, bei dem ein Angreifer Zugriff auf gesperrte Verzeichnisse gewinnt und Code ausserhalb des Web Root Verzeichnisses ausf\"uhrt.
   \newline
@@ -295,12 +361,19 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Format String}
+%----------------------------------------------------------------------------------------
+%	FORMAT STRING ATTACK
+%----------------------------------------------------------------------------------------
+
+\subsection{Format String Attack}
+
+\begin{frame}[fragile]{Format String Attack}
   Format Funktion ist eine ANSI C Funktion, um primitive Variablen in eine lesbare Ausgabe konvertieren. z.B. \textit{printf}, \textit{fprintf}
   \begin{itemize}
     \item Sind C/C++ Probleme
     \item treten heute nicht sehr h\"afig auf, da sie sich sehr leicht erkennen lassen
   \end{itemize}
+
   Ziele:
   \begin{itemize}
     \item Programmcrash
@@ -308,8 +381,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Format String - Beispiel I}
-
+\begin{frame}[fragile]{Format String Attack - Beispiel I}
   \begin{lstlisting}[style=CStyle]
   int main (int argc, char **argv)
   {
@@ -331,11 +403,12 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Format String - Beispiel II}
+\begin{frame}[fragile]{Format String Attack - Beispiel II}
   Erwartete Eingabe:
   \begin{lstlisting}[style=BashStyle]
   ./formattest “Bob”
   \end{lstlisting}
+
   Ausgabe:
   \begin{lstlisting}[style=BashStyle]
   Buffer size is (3)
@@ -345,11 +418,12 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Format String - Beispiel III}
+\begin{frame}[fragile]{Format String Attack - Beispiel III}
   Schwachstelle ausgenutzt, \%x := Ausgabe Hexadezimal:
   \begin{lstlisting}[style=BashStyle]
   ./formattest “Bob %x %x”
   \end{lstlisting}
+
   Anstatt \%x Wert von Bob auszugeben, gibt nun auch den Inhalt der Speicher Adresse aus:
   \begin{lstlisting}[style=BashStyle]
   Buffer size is (14)
@@ -364,6 +438,14 @@
       Bob %x %x \n” , strlen (buf) , buf ) ;
   \end{lstlisting}
 \end{frame}
+
+%----------------------------------------------------------------------------------------
+%	OVERFLOWS
+%----------------------------------------------------------------------------------------
+
+\subsection{Overflows}
+
+\subsubsection{Buffer Overflows}
 
 \begin{frame}[fragile]{Buffer Overflows}
   Durch Programmfehler werden zu gro{\ss}e Datenmengen in einen zu klein reservierten Speicherbereich geschrieben.
@@ -387,6 +469,7 @@
     \item Unsichere Libraries in C/C++
     \item Unsicheres Behandeln von Stirngs und Arraygr\"o{\ss}en
   \end{itemize}
+
   Schutzma{\ss}nahmen:
   \begin{itemize}
     \item Type-Safe Programmiersprachen verwenden, welche Memory Management zB Java, Python, Ruby,...
@@ -411,25 +494,6 @@
   Wenn man in C nun einen 30 Byte String zuweist entsteht eine Overflow Situation.
 \end{frame}
 
-\begin{frame}[fragile]{Buffer Overflows - Stack Overflow}
- Die R\"ucksprungadresse eines Unterprogramms und dessen lokale Variablen werden auf einen als Stack bezeichneten Bereich zu gelegt.
- \begin{lstlisting}[style=CStyle]
-  void input_line()
-  {
-    char line[1000];
-    if (gets(line))
-      puts(line);
-  }
- \end{lstlisting}
-
- \begin{figure}%
-  \centering
-  {\includegraphics[scale=0.10]{stackoverflow}}%
-  \quad
-  {\includegraphics[scale=0.10]{stackoverflow_2}}%
- \end{figure}
-\end{frame}
-
 \begin{frame}[fragile]{Buffer Overflows - Compiler Ma{\ss}nahmen}
   Moderne Compiler wie neue Versionen des GNU C-Compilers erlauben die Aktivierung von \"Uberpr\"ufungscode-Erzeugung bei der \"Ubersetzung.
 
@@ -450,6 +514,29 @@
   reserved frame
 \end{frame}
 
+\subsubsection{Stack Overflows}
+
+\begin{frame}[fragile]{Stack Overflows}
+ Die R\"ucksprungadresse eines Unterprogramms und dessen lokale Variablen werden auf einen als Stack bezeichneten Bereich zu gelegt.
+ \begin{lstlisting}[style=CStyle]
+  void input_line()
+  {
+    char line[1000];
+    if (gets(line))
+      puts(line);
+  }
+ \end{lstlisting}
+
+ \begin{figure}%
+  \centering
+  {\includegraphics[scale=0.10]{stackoverflow}}%
+  \quad
+  {\includegraphics[scale=0.10]{stackoverflow_2}}%
+ \end{figure}
+\end{frame}
+
+\subsubsection{Heap Overflows}
+
 \begin{frame}[fragile]{Buffer Overflows - Heap Overflows}
   Ist ein Buffer Overflow, der im Heap Bereich stattfindet.
   \begin{itemize}
@@ -465,6 +552,8 @@
   \end{itemize}
 \end{frame}
 
+\subsubsection{Integer Overflows}
+
 \begin{frame}[fragile]{Integer Overflows}
   Entstehen wenn Operationen auf Integer die maximale Gr\"o{\ss}e \"uberschreiten. z.B. arithemetische oder cast Operationen.
   \begin{itemize}
@@ -476,65 +565,12 @@
   \includegraphics[scale=0.25]{integer_overflow}
 \end{frame}
 
-%----------------------------------------------------------------------------------------
-%	OPEN SOURCE UND PROPERTÄRE SOFTWARE
-%----------------------------------------------------------------------------------------
-
-\section{Open Source und Propert\"are Software}
-
-\begin{frame}[fragile]{Open Source Vorteile}
-  \begin{itemize}
-    \item Programmcode kann \"uberpr\"uft werden, Sicherheitsl\"ucken fallen leichter auf
-    \item Erschwert implementierung von Backdoors
-    \item Software kann von der Communtiy weiterentwickelt oder geforkt werden
-    \item Bestimmte Funktionen k\"onnen abgedreht werden
-  \end{itemize}
-\end{frame}
-
-%----------------------------------------------------------------------------------------
-%	FIRMWARE SECURITY
-%----------------------------------------------------------------------------------------
-
-\section{Firmware Security}
-\begin{frame}[fragile]{Spezialfall Firmware}
-  \begin{itemize}
-    \item Ger\"at wurde bereits verkauft, kein Interesse des Herstellers an Updates
-    \item Zu viele verschiedene Ger\"ate - Unm\"oglicher Verwaltungsaufwand
-      \begin{itemize}
-        \item Alleine Samsung hat bis 2014 56 verscheidene Smartphones pro Jahr herausgebracht
-      \end{itemize}
-    \item Firmware agiert in Schicht unter Betriebssystem - Angriffe k\"onnen vom Benutzer nicht erkannt oder verhindert werden
-    \item Firmware meist Closed Source - keine Weiterentwicklung der Community
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Sicherheitsl\"ucken in Firmware - Beispiele}
-  \begin{itemize}
-    \item BadUSB - Eingabeger\"ate, USB-Sticks, Speichermedien, Kameras, ...
-    \item Intel ME - Betriebssystem im Prozessor (AMD PSP)
-      \begin{itemize}
-        \item Funktionsweise undokumentiert
-        \item Kritische L\"ucke 2017 entdeckt
-        \item NSA und Google haben Intel ME abgeschaltet auf ihren Ger\"aten
-      \end{itemize}
-    \item Android
-      \begin{itemize}
-        \item praktisch alle Android Ger\"ate ohne Sicherheitupdates
-      \end{itemize}
-    \item Router, Smart TV's, IoT-Devices - Millionen angreifbare Ger\"ate in Haushalten, Firmen und Beh\"orden
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Smartphones Sicherheitsupdates}
-  \includegraphics[scale=0.5]{android_sub}
-  \newline
-\end{frame}
-
 \begin{frame}[fragile]{Quellen}
   \begin{itemize}
     \item \url{wikipedia.org}
     \item \url{owasp.org}
     \item \url{https://docs.oracle.com/javase/7/docs/api/java/net/URI.html#normalize()}
+    \item \url{https://www.statista.com/statistics/434880/cyber-crime-exploits/}
   \end{itemize}
 \end{frame}
 
