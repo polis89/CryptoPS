@@ -60,6 +60,26 @@
     language=HTML
 }
 
+\lstdefinestyle{BashStyle}{
+    backgroundcolor=\color{backgroundColour},
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    %breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    %numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=Bash
+}
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -109,7 +129,7 @@
     \item Zuviel Komplexit\"at
       \begin{itemize}
         \item Komplexe Systeme kann keiner mehr \"uberblicken
-        \item Auf zu komplexe Systeme wird noch mehr Komplexit\"at gestapelt, die wieder eigene Fehler hat - Virenscanner, Hardwareschutz
+        \item schwer \"uber Sicherheit argumentierbar
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -231,11 +251,73 @@
 \end{frame}
 
 \begin{frame}[fragile]{Format String}
-  test frame
+  Format Funktion ist eine ANSI C Funktion, um primitive Variablen in eine lesbare Ausgabe konvertieren. z.B. \textit{printf}, \textit{fprintf}
+  \begin{itemize}
+    \item Sind C/C++ Probleme
+    \item treten heute nicht sehr h\"afig auf, da sie sich sehr leicht erkennen lassen
+  \end{itemize}
+  Ziele:
+  \begin{itemize}
+    \item Programmcrash
+    \item Schadcode ausf\"uhrung
+  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Format String - Schutzma{\ss}nahmen}
-  test frame
+\begin{frame}[fragile]{Format String - Beispiel I}
+
+  \begin{lstlisting}[style=CStyle]
+  int main (int argc, char **argv)
+  {
+	   char buf [100];
+	   int x = 1 ;
+
+	   snprintf ( buf, sizeof buf, argv [1] ) ;
+	   buf [ sizeof buf -1 ] = 0;
+
+	   printf ( “Buffer size is: (%d)
+          \nData input: %s \n” , strlen (buf) , buf ) ;
+
+	   printf ( “X equals: %d/ in
+          hex: %#x\nMemory address
+          for x: (%p) \n” , x, x, &x) ;
+
+	   return 0 ;
+  }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Format String - Beispiel II}
+  Erwartete Eingabe:
+  \begin{lstlisting}[style=BashStyle]
+  ./formattest “Bob”
+  \end{lstlisting}
+  Ausgabe:
+  \begin{lstlisting}[style=BashStyle]
+  Buffer size is (3)
+  Data input : Bob
+  X equals: 1/ in hex: 0x1
+  Memory address for x (0xbffff73c)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Format String - Beispiel III}
+  Schwachstelle ausgenutzt, \%x := Ausgabe Hexadezimal:
+  \begin{lstlisting}[style=BashStyle]
+  ./formattest “Bob %x %x”
+  \end{lstlisting}
+  Anstatt \%x Wert von Bob auszugeben, gibt nun auch den Inhalt der Speicher Adresse aus:
+  \begin{lstlisting}[style=BashStyle]
+  Buffer size is (14)
+  Data input : Bob bffff 8740
+  X equals: 1/ in hex: 0x1
+  Memory address for x (0xbffff73c)
+  \end{lstlisting}
+
+  \textit{printf} Argument sieht nun folgenderma{\ss}en aus:
+  \begin{lstlisting}[style=CStyle]
+  printf ( “Buffer size is: (%d) \n Data input:
+      Bob %x %x \n” , strlen (buf) , buf ) ;
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Buffer Overflows}
@@ -405,7 +487,8 @@
 
 \begin{frame}[fragile]{Quellen}
   \begin{itemize}
-    \item Wikipedia
+    \item wikipedia.org
+    \item owasp.org
   \end{itemize}
 \end{frame}
 
