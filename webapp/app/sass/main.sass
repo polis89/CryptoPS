@@ -98,21 +98,51 @@ ul
 			margin: 0 auto
 			display: block
 .data-block
-	width: 300px
-	position: fixed
-	top: 50%
-	left: 50%
-	transform: translate(-50%, -50%)
+	text-align: left
+	padding: 30px 30px
 	.name
 		color: $c-a
-		text-align: center
 		font-weight: bold
 		font-size: 22px
 		margin-bottom: 20px
 	.granted
-		text-align: center
 		font-weight: 500
 		color: green
+
+.chat
+	margin-left: 30px
+	border: $c-border 1px solid
+	border-bottom: none
+	margin-right: 30px
+	.chat-row
+		padding-left: 15px
+		padding-top: 20px
+		padding-bottom: 20px
+		border-bottom: 1px $c-border solid
+		&:nth-child(2n+1)
+			background: #f1f1f1
+		.name
+			font-weight: bold
+			text-transform: uppercase
+			color: $c-a
+			position: absolute		
+		.msg
+			padding-left: 100px
+			img
+				max-width: 140px
+				margin-left: 20px
+				margin-right: 10px
+
+.enter_new
+	margin-left: 30px
+	margin-top: 25px
+	margin-right: 30px
+	textarea
+		width: 50%
+		height: 100px
+		margin-bottom: 10px
+	.name
+		margin-bottom: 10px
 
 
 

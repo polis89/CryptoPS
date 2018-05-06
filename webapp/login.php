@@ -49,24 +49,69 @@
 
 	$login = $_POST["login"];
 	$passwd = $_POST["passwd"];
-
+	$is_new_session = true;
 	// MySQL query
 	// $sql = "SELECT id, name FROM users WHERE name='" .  $login . "' AND passwd='" . $passwd . "';";
 	$sql = "SELECT id, name FROM users WHERE name='" . $login . "' AND passwd='" . $passwd . "'" ;
-	$result = $conn->query($sql);
 
 	// echo $_POST["login"] . PHP_EOL;
 	// echo $_POST["passwd"] . PHP_EOL;
+ 	if(!isset($_COOKIE["user_secret_key"])) {
+    // echo "Cookie is not set!";
+	}else{
+    // echo "Value is: " . $_COOKIE["user_secret_key"] . PHP_EOL;
+    $sql = "SELECT id, name FROM users WHERE cookie=" .$_COOKIE["user_secret_key"];
+    $is_new_session = false;
+	}
+
+	$result = $conn->query($sql);
 
 	if($result->num_rows > 0){
+		$row = $result->fetch_assoc();
+		$user_name = $row["name"];
+		$user_id = $row["id"];
+		if($is_new_session){
+			$user_secret_key = rand();
+			$sql = "UPDATE users SET cookie=".$user_secret_key." WHERE id=".$user_id;
+			$conn->query($sql);
+			setcookie("user_secret_key", $user_secret_key, time()+36000);
+			header('Location: ./login.php');
+		}
 		?>
 
 
 
 	<div class="data-block">
 
-		<div class="name">!!! WELCOME !!!</div>
 		<div class="granted">Access Granted</div>
+		<div class="name">Logged in as <?php echo $user_name; ?></div>
+		<a href="#" class="btn logout">LOG OUT</a>
+	</div>
+
+
+
+	<div class="chat">
+		<?php 
+		$sql = "SELECT * FROM posts " ;
+		$result = $conn->query($sql);
+		while ($row = $result->fetch_assoc()) {
+	    echo '<div class="chat-row">';
+	    echo '<div class="name">' . $row["name"] . "</div>";
+	    echo '<div class="msg">' . $row["msg"] . "</div>";
+	    echo '</div>';
+	  }
+		?>
+	</div>
+	
+
+	<div class="enter_new">
+		<form action="addnew.php" method="post">
+			<div class="name">Enter new message</div>
+			<input type="hidden" name="name" value="<?php echo $user_name;?>">
+			<textarea name="text" id="text" cols="30" rows="10"></textarea>
+			<br>
+			<input type="submit" value="Submit" class="btn">
+		</form>
 	</div>
 
 		<?php
@@ -76,10 +121,25 @@
 
 	<div class="login-form">
 		<form action="login.php" method="post">
-			<input type="text" placeholder="login" name="login" class="error">
-			<input type="password" placeholder="password" name="passwd" class="error">
+			<input type="text" placeholder="login" name="login" <?php
+				if(isset($_POST["login"])){
+			?>class="error"<?php		
+				} 
+			?>>
+			<input type="password" placeholder="password" name="passwd" <?php
+				if(isset($_POST["login"])){
+			?>class="error"<?php		
+				} 
+			?>>
 			<input type="submit" value="Log in" class="btn">
-			<img src="./img/AccessDenied.jpg" alt="AD">
+			<?php
+				if(isset($_POST["login"])){
+			?>
+				<img src="./img/AccessDenied.jpg" alt="AD">
+			<?php		
+				} 
+			?>
+
 		</form>
 	</div>
 

