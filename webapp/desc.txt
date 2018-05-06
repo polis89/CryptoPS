@@ -61,3 +61,7 @@ in name field and nothing in passwd
 - Log in als user_1:123  (Als ob ein reelen User eingeloggt haette)
 - Log out
 - Schau mal in Console mit laufende php server ob coockies empfangen wurden. (Schau presentation)
+
+//Buffer overflow in buffer_overflow
+TO COMPILE:
+gcc -fno-stack-protector -z execstack -o prog prog.c  
