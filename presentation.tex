@@ -82,6 +82,48 @@
     language=Bash
 }
 
+\lstdefinestyle{PHPStyle}{
+    % backgroundcolor=\color{backgroundColour},
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\scriptsize,
+    breakatwhitespace=true,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    % aboveskip=3em,
+    %numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=1,
+    language=PHP
+}
+
+\lstdefinestyle{SQLStyle}{
+    % backgroundcolor=\color{backgroundColour},
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\scriptsize,
+    breakatwhitespace=true,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    % aboveskip=3em,
+    %numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=1,
+    language=SQL
+}
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -240,10 +282,54 @@
   \end{itemize}
 \end{frame}
 
+% \begin{frame}[fragile]{SQL Injection - Beispiel}
+%   Es wird zus\"atzlicher Code bei Aufruf eingeschleust, der die Benutzertabelle modifiziert.
+%   \newline
+%   \includegraphics[scale=0.5]{sql_injection_1}
+% \end{frame}
+
 \begin{frame}[fragile]{SQL Injection - Beispiel}
-  Es wird zus\"atzlicher Code bei Aufruf eingeschleust, der die Benutzertabelle modifiziert.
+  Als ein funktionierendes Beispiel betrachten wir eine Anmeldeseite
   \newline
-  \includegraphics[scale=0.5]{sql_injection_1}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{sql_ex_1}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{SQL Injection - Beispiel}
+  Um die eingegebenen Daten zu \"uberpr\"ufen, fragt вas Site-Skript die Datenbank ab, ob das angegebene User/Passwort-Paar existiert:
+  \newline
+  \begin{lstlisting}[style=SQLStyle]
+    SELECT id, name FROM users 
+      WHERE name='$login' AND passwd='$passwd'
+  \end{lstlisting}
+  Wo \$login und \$passwd sind Werte aus dem Form.
+  \newline
+  Dann \"uberpr\"uft den Script ob die Abfrage hat das not-null Ergebnis zur\"uckgegeben:
+  \newline
+  \begin{lstlisting}[style=PHPStyle]
+    $result->num_rows > 0
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{SQL Injection - Beispiel}
+  Um das SQL Injection zu ausnutzen, geben wir in der Name-field {\fboxsep=0pt\colorbox{mGreen!50}{\strut ' OR 0=0 -- }} ein.
+  Den Password kann beliebig sein.
+  \newline
+  Dann wird die Abfragequery im Skript so aussehen:
+  \newline
+  \begin{lstlisting}[style=SQLStyle]
+    SELECT id, name FROM users 
+      WHERE name='' OR 0=0 -- ' AND passwd=''
+  \end{lstlisting}
+  \begin{itemize}
+    \item Alles was nach {\fboxsep=0pt\colorbox{mGreen!50}{\strut -- }} steht, wird als einen Kommentar interpretiert.
+    \item Weil 0=0 immer true ist, werden alle Datenbankeintr\"age zur\"uckgegeben.
+    \item $num\_rows>0$ wird true liefern.
+    \item Der Zugriff auf die Website wird erlaubt werden.
+  \end{itemize}
+  
 \end{frame}
 
 %----------------------------------------------------------------------------------------

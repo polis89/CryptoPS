@@ -32,6 +32,9 @@
 <body>
 
 	<div class="login-form">
+		<div class="name">
+			Log-in to your account
+		</div>
 		<form action="login.php" method="post">
 			<input type="text" placeholder="login" name="login">
 			<input type="password" placeholder="password" name="passwd">
