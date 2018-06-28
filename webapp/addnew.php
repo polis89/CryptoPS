@@ -1,8 +1,8 @@
 <?php
 
 	$servername = "127.0.0.1";
-	$username = "root";
-	$password = "CVB9zx";
+	$username = "dmitrii";
+	$password = "password";
 	$dbname = "crypto_db";
 	//Connect to MySQL'
 	$conn = new mysqli($servername, $username, $password, $dbname);

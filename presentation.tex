@@ -269,44 +269,47 @@
 
 %----------------------------------------------------------------------------------------
 % Code Injection
-%----------------------------------------------------------------------------------------
+% %----------------------------------------------------------------------------------------
 
-\section{Exploits}
+% \section{Exploits}
 
-\subsection{Code Injections}
+% \subsection{Code Injections}
 
-\begin{frame}[fragile]{Code Injections}
-  Code Injection ist das ausnutzen von Bugs durch Eingabe von ungewollten Parametern, um dadurch die Ausf\"urung zu ver\"andern.
-  \newline
-  Kann folgende Auswirkungen haben:
-  \begin{itemize}
-    \item Daten in SQL Tabellen ver\"andern
-    \item Installieren von Malware durch Server-Scripting Code zB. PHP
-    \item Root Privilegien bekommen, durch Shell Injection oder Windows Service
-    \item Angriff auf Web User durch Cross-Site-Scripting in HTML/JS
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Code Injection - Masnahmen}
-  Kann erschwert werden durch:
-  \begin{itemize}
-    \item API's benutzen, die sicher gegen\"uber allen Symbolen sind, indem der Eingabestring compiliert und gefiltert wird.
-    \item Whitelisting von erw\"unschten Parametern
-  \end{itemize}
-\end{frame}
+% \begin{frame}[fragile]{Code Injections}
+%   Code Injection ist das ausnutzen von Bugs durch Eingabe von ungewollten Parametern, um dadurch die Ausf\"urung zu ver\"andern.
+%   \newline
+%   Kann folgende Auswirkungen haben:
+%   \begin{itemize}
+%     \item Daten in SQL Tabellen ver\"andern
+%     \item Installieren von Malware durch Server-Scripting Code zB. PHP
+%     \item Root Privilegien bekommen, durch Shell Injection oder Windows Service
+%     \item Angriff auf Web User durch Cross-Site-Scripting in HTML/JS
+%   \end{itemize}
+% \end{frame}
 
 %----------------------------------------------------------------------------------------
 %	SQL INJECTION
 %----------------------------------------------------------------------------------------
 
-\subsubsection{SQL Injection}
+\section{SQL Injection}
 
 \begin{frame}[fragile]{SQL Injection}
-  Ausnutzen von Sicherheitsl\"ucken in Zusammenhang mit SQL-Datenbanken.
-  Ziele:
+  SQL Injection kann verwendet werden, wenn die Benutzereingabe SQL-Befehle beeinflussen kann.
   \begin{itemize}
-    \item Daten auszusp\"ahen oder zu ver\"andern
-    \item Kontrolle \"uber Server zu erhalten
+    \item Im Eingabeformular
+    \item In der Browser query string
+  \end{itemize}
+  Der Angreifer vesucht eine Eingabe so zu erweitern, dass erw\"unschte SQL-Befehl ausgef\"urt wird. Oft verwendet man dafuer SQL-Metazeichen (\textbackslash „ ' und ;)
+  % Ausnutzen von Sicherheitsl\"ucken in Zusammenhang mit SQL-Datenbanken.
+  % SQL-Injections sind dann m\"oglich, wenn ungewollten Daten in den SQL-Interpreter gelangen.
+  
+\end{frame}
+\begin{frame}[fragile]{SQL Injection}
+  Folgen:
+  \begin{itemize}
+    \item Der Angreifer kann als Benutzer oder Administrator einloggen
+    \item Daten k\"onnen auszusp\"ahen, ver\"andern oder gel\"oscht werden
+    \item Im schlimmsten Fall kann jeder beliebiger SQL-Befehl ausgef\"uhrt werden
   \end{itemize}
 \end{frame}
 
@@ -319,10 +322,37 @@
 \begin{frame}[fragile]{SQL Injection - Beispiel}
   Als ein funktionierendes Beispiel betrachten wir eine Anmeldeseite
   \newline
-  \begin{figure}[h]
+  \newline
+  \newline
+  \begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=0.5\textwidth]{sql_ex_1}
-  \end{figure}
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.5\textwidth]{sql_ex_1}
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.49\textwidth}
+    \centering
+    \begin{table}[]
+    \scriptsize 
+    \centering
+      \begin{table}[]
+        \centering
+        \label{my-label}
+        \begin{tabular}{| l | l | l | l |}
+          \hline
+          ID & login & Password & Cookie \\
+          \hline
+          1 & admin & admin123 & sessionCoockie \\ 
+          2 & user\_1 & 123 & sessionCoockie \\ 
+          3 & user\_2 & 123 & sessionCoockie \\ 
+          \hline
+        \end{tabular} 
+        \footnotesize
+        \caption{SQL table}
+      \end{table}
+    \end{table}
+  \end{minipage}
 \end{frame}
 
 \begin{frame}[fragile]{SQL Injection - Beispiel}
@@ -359,44 +389,78 @@
 
 \end{frame}
 
+\begin{frame}[fragile]{Code Injection - Masnahmen}
+  Gegenmaßnahmen:
+  \begin{itemize}
+    \item Escaping von Userinput (SQL-Metazeichen)
+    \item Ueberprufung von Userinout mit Hilfe von Regular expressions
+    \item Gespeicherte Funktionen in Datenbank
+  \end{itemize}
+\end{frame}
+
 %----------------------------------------------------------------------------------------
 %	CROSS SITE SCRIPTING
 %----------------------------------------------------------------------------------------
 
-\subsubsection{Cross Site Scripting}
+\section{Cross Site Scripting (XSS)}
 
 \begin{frame}[fragile]{Cross Site Scripting - XSS}
-  Bei Cross-Site Scripting (XSS) werden Sicherheitsl\"ucken in Webanwendungen ausgenutzt um schadhaften Code in sonst vertrauensw\"urdigen Websiten einzubinden.
-  Das ist der Fall wenn es Nicht-Vertrauensw\"urdigen Dritten erlaubt ist, Daten und Code hochzuladen.
+  Bei Cross-Site Scripting (XSS) gelingt es dem Angreifer, seinen Schadcode in eine vermeintlich vertrauenswürdige Umgebung einzubetten.
+  % Bei Cross-Site Scripting (XSS) werden Sicherheitsl\"ucken in Webanwendungen ausgenutzt um schadhaften Code in sonst vertrauensw\"urdigen Websiten einzubinden.
+  % Das ist der Fall wenn es Nicht-Vertrauensw\"urdigen Dritten erlaubt ist, Daten und Code hochzuladen.
   \newline
   Ziele:
   \begin{itemize}
     \item Benutzerkonten zu \"ubernehmen
-    \item Daten (Identit\"atsdiebstahl)
+    \item Session's coockies zu stehlen
+    \item Daten (Identit\"atsdiebstahl) zu stehlen
   \end{itemize}
-  Der Browser des Benutzers kann nicht zwischen sch\"adlichem und gew\"unschtem Code unterscheiden.
+  % Der Browser des Benutzers kann nicht zwischen sch\"adlichem und gew\"unschtem Code unterscheiden.
 \end{frame}
 
-\begin{frame}[fragile]{Cross Site Scripting - reflektierte Angriffe}
-  Eine Benutzereingabe wird direkt vom Server wieder zur\"uck gesendet.
+\begin{frame}[fragile]{Cross Site Scripting - XSS}
+  Drei Arten von XSS:
+  \begin{itemize}
+    \item Reflektierte Angriffe
+    \item Persistente Angriffe
+    \item Lokales XSS
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Cross Site Scripting - reflektierte XSS}
+  Beim reflektierte XSS wird eine Benutzereingabe direkt vom Server wieder zur\"uck gesendet.
   Wenn diese Eingabe Scriptcode enth\"alt, die vom Browser des Nutzers interpretiert wird, kann dort Schadcode ausgef\"urt werden.
-  Beispiel: Suchfunktion.
+  \newline
+  \newline
+  Ein Opfer klickt eine pr\"aparierte URL an, in der sch\"adlicher Code eingef\"ugt ist. Der Server \"ubernimmt diesen Code und generiert eine dynamisch ver\"anderte Webseite. Der Anwender sieht eine vom Angreifer manipulierte Webseite und h\"alt sie für vertrauensw\"urdig. 
+  \newline
+  \newline
+  Dieser Typ hei{\ss}t auch nicht-persistent, da der Schadcode nur tempor\"ar bei der generierte Webseite existiert.
+\end{frame}
+
+\begin{frame}[fragile]{Cross Site Scripting - reflektierte XSS}
+  Beispiel von reflektierte XSS: Suchfunktion.
+  \newline
+  Ein korrektes url:
   \begin{lstlisting}[style=CStyle]
     http://example.com/?suche=Suchbegriff
-
+  \end{lstlisting}
+  Url mit dem Schadecode:
+  \begin{lstlisting}[style=CStyle]
     http://example.com/?suche=<script type=
           "text/javascript">alert("XSS")</script>
-
+  \end{lstlisting}
+  Result in Browser des Nutzers:
+  \begin{lstlisting}[style=CStyle]
     <p>Sie suchten nach: <script type=
           "text/javascript">alert("XSS")</script></p>
   \end{lstlisting}
-  Ausgenutzt wird, dass dynamisch generierte Websiten ihren Ihnalt an \"ubergebene Eingabewerte anpassen, durch HTTP-GET und HTTP-POST.
-  Dieser Typ hei{\ss}t auch nicht-persistent, da der Schadcode nur tempor\"ar bei der jeweiligen Generierung der Website eingeschleust wird.
 \end{frame}
 
-\begin{frame}[fragile]{Cross Site Scripting - persistente Angriffe}
-  Unterscheidet sich von reflektierenden Angriffen nur dadurch, dass der Schadcode auf dem Server gespeichert wird, wodurch er bei jeder Anfrage asugef\"urt wird.
-  Ist bei Webanwendungen m\"oglich, die Benutzereingaben serverseitig ohne Pr\"ufung speichern und diese sp\"ater wieder ausliefert.
+\begin{frame}[fragile]{Cross Site Scripting - Persistente XSS}
+  Persistente XSS unterscheidet sich von reflektierenden Angriffen nur dadurch, dass der Schadcode auf dem Server gespeichert wird, wodurch er bei jeder Anfrage ausgef\"urt wird.
+  Ist bei Webanwendungen m\"oglich, die Benutzereingaben serverseitig ohne Pr\"ufung speichern und diese sp\"ater wieder ausliefert. Persistentes XSS ist für den Angreifer eine bevorzugte Methode, da es nicht notwendig ist, den Benutzer dazu zu bringen, auf die gew\"unschte Link zu klicken.
+  \newline
   Beispiel Posting auf Website:
   \begin{lstlisting}[style=CStyle]
     Eine sehr gutes Produkt!<script type=
@@ -404,16 +468,21 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Cross Site Scripting - DOM-basierte Angriffe}
-  Webapplikation auf dem Server ist hier nicht beteiligt, wird auch lokales XSS genannt.
+\begin{frame}[fragile]{Cross Site Scripting - Lokales XSS}
+  % Webapplikation auf dem Server ist hier nicht beteiligt, wird auch lokales XSS genannt.
+  F\"ur lokales XSS ist keine Sicherheitsl\"ucke auf einem Webserver erforderlich. Der Schadcode wird direkt an den Anwender gesendet und beispielsweise im Browser ausgeführt, ohne dass der User dies bemerkt.
+  \newline
+  Falls der Browser besondere Rechte auf dem Rechner besitzt, ist es zudem möglich, lokale Daten auf dem Gerät zu verändern.
+  \newline
+  Ausgangspunkt des Angriffs ist das Anklicken eines manipulierten Links durch den Anwender.
   Somit auch statische HTML Seiten mit JavaScript unterst\"utzung anf\"allig f\"ur diesen Angriff.
 \end{frame}
 
 \begin{frame}[fragile]{Cross Site Scripting - Schutzma{\ss}nahmen}
   \begin{itemize}
-    \item Anstatt Blacklist mit b\"osen Eingaben zu f\"uhren, besser Whitelist mit guten Eingaben. Da die Anzahl der Angriffsmethoden nicht bekannt ist.
-    \item HTML-Metazeichen durch Zeichenreferenzen ersetzen, damit sie als normale Zeichen behandelt werden
-    \item Sicher programmierte Anwendung sind Web Apllication Firewalls (WAF) vorzuziehen.
+    \item (Client side) Alle empfangene Links kritisch zu prüfen und nicht beliebig aufzurufen
+    \item HTML-Metazeichen durch Zeichenreferenzen ersetzen (escapen), damit sie als normale Zeichen behandelt werden
+    \item Input Validation, z.B. mit regular expression
   \end{itemize}
 \end{frame}
 
@@ -484,7 +553,7 @@
 %	OVERFLOWS
 %----------------------------------------------------------------------------------------
 
-\subsection{Overflows}
+\section{Overflows}
 
 \subsubsection{Buffer Overflows}
 
@@ -688,7 +757,7 @@
 % PATH TRAVERSAL ATTACK
 %----------------------------------------------------------------------------------------
 
-\subsection{Path Traversal Attack}
+\section{Path Traversal Attack}
 
 \begin{frame}[fragile]{Path Traversal Attack}
   Ein HTTP Angriff, bei dem ein Angreifer Zugriff auf gesperrte Verzeichnisse gewinnt und Code ausserhalb des Web Root Verzeichnisses ausf\"uhrt.
@@ -745,7 +814,7 @@
 % FORMAT STRING ATTACK
 %----------------------------------------------------------------------------------------
 
-\subsection{Format String Attack}
+\section{Format String Attack}
 
 \begin{frame}[fragile]{Format String Attack}
   Format Funktion ist eine ANSI C Funktion, um primitive Variablen in eine lesbare Ausgabe konvertieren. z.B. \textit{printf}, \textit{fprintf}
@@ -909,6 +978,8 @@
     \item \url{https://docs.oracle.com/javase/7/docs/api/java/net/URI.html#normalize()}
     \item \url{https://www.statista.com/statistics/434880/cyber-crime-exploits/}
     \item \url{https://dhavalkapil.com/blogs/Buffer-Overflow-Exploit/}
+    \item \url{https://www.security-insider.de/was-ist-cross-site-scripting-xss-a-699660/}
+    \item \url{https://www.webmasterpro.de/server/article/sicherheit-sql-injection}
   \end{itemize}
 \end{frame}
 
