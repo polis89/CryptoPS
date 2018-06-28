@@ -1,6 +1,8 @@
 \documentclass[10pt]{beamer}
-
+\mode<presentation> {
 \usetheme[progressbar=frametitle]{metropolis}
+}
+\hypersetup{pdfpagemode=FullScreen}
 \usepackage{appendixnumberbeamer}
 
 \usepackage{booktabs}
@@ -196,11 +198,6 @@
         \item Sehr schwer nachzuweisen - wie Unterscheidet man Fehler von b\"oswilliger Absicht?
         \item Werden auch von anderen Teilnehmern entdeckt und von Kriminellen dann f\"ur ihre Zwecke missbraucht
       \end{itemize}
-    \item Zuviel Komplexit\"at
-      \begin{itemize}
-        \item Komplexe Systeme kann keiner mehr \"uberblicken
-        \item schwer \"uber Sicherheit argumentierbar
-      \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -210,57 +207,6 @@
   \includegraphics[scale=0.5]{cyberattacks_2017}
   \newline
   Quelle: www.statista.com
-\end{frame}
-
-%----------------------------------------------------------------------------------------
-%	OPEN SOURCE UND PROPERTÄRE SOFTWARE
-%----------------------------------------------------------------------------------------
-
-\begin{frame}[fragile]{Open Source Vorteile}
-  \begin{itemize}
-    \item Programmcode kann \"uberpr\"uft werden, Sicherheitsl\"ucken fallen leichter auf
-    \item Erschwert implementierung von Backdoors
-    \item Software kann von der Communtiy weiterentwickelt oder geforkt werden
-    \item Bestimmte Funktionen k\"onnen abgedreht werden
-  \end{itemize}
-\end{frame}
-
-%----------------------------------------------------------------------------------------
-%	FIRMWARE SECURITY
-%----------------------------------------------------------------------------------------
-
-\begin{frame}[fragile]{Spezialfall Firmware}
-  \begin{itemize}
-    \item Ger\"at wurde bereits verkauft, kein Interesse des Herstellers an Updates
-    \item Zu viele verschiedene Ger\"ate - Unm\"oglicher Verwaltungsaufwand
-      \begin{itemize}
-        \item Alleine Samsung hat bis 2014 56 verscheidene Smartphones pro Jahr herausgebracht
-      \end{itemize}
-    \item Firmware agiert in Schicht unter Betriebssystem - Angriffe k\"onnen vom Benutzer nicht erkannt oder verhindert werden
-    \item Firmware meist Closed Source - keine Weiterentwicklung der Community
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Sicherheitsl\"ucken in Firmware - Beispiele}
-  \begin{itemize}
-    \item BadUSB - Eingabeger\"ate, USB-Sticks, Speichermedien, Kameras, ...
-    \item Intel ME - Betriebssystem im Prozessor (AMD PSP)
-      \begin{itemize}
-        \item Funktionsweise undokumentiert
-        \item Kritische L\"ucke 2017 entdeckt
-        \item NSA und Google haben Intel ME abgeschaltet auf ihren Ger\"aten
-      \end{itemize}
-    \item Android
-      \begin{itemize}
-        \item praktisch alle Android Ger\"ate ohne Sicherheitupdates
-      \end{itemize}
-    \item Router, Smart TV's, IoT-Devices - Millionen angreifbare Ger\"ate in Haushalten, Firmen und Beh\"orden
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Smartphones Sicherheitsupdates}
-  \includegraphics[scale=0.5]{android_sub}
-  \newline
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -302,13 +248,13 @@
   Der Angreifer vesucht eine Eingabe so zu erweitern, dass erw\"unschte SQL-Befehl ausgef\"urt wird. Oft verwendet man dafuer SQL-Metazeichen (\textbackslash „ ' und ;)
   % Ausnutzen von Sicherheitsl\"ucken in Zusammenhang mit SQL-Datenbanken.
   % SQL-Injections sind dann m\"oglich, wenn ungewollten Daten in den SQL-Interpreter gelangen.
-  
+
 \end{frame}
 \begin{frame}[fragile]{SQL Injection}
   Folgen:
   \begin{itemize}
-    \item Der Angreifer kann als Benutzer oder Administrator einloggen
-    \item Daten k\"onnen auszusp\"ahen, ver\"andern oder gel\"oscht werden
+    \item Der Angreifer kann sich als Benutzer oder Administrator einloggen
+    \item Daten k\"onnen ausgesp\"aht, ver\"andert oder gel\"oscht werden
     \item Im schlimmsten Fall kann jeder beliebiger SQL-Befehl ausgef\"uhrt werden
   \end{itemize}
 \end{frame}
@@ -334,7 +280,7 @@
   \begin{minipage}{0.49\textwidth}
     \centering
     \begin{table}[]
-    \scriptsize 
+    \scriptsize
     \centering
       \begin{table}[]
         \centering
@@ -343,11 +289,11 @@
           \hline
           ID & login & Password & Cookie \\
           \hline
-          1 & admin & admin123 & sessionCoockie \\ 
-          2 & user\_1 & 123 & sessionCoockie \\ 
-          3 & user\_2 & 123 & sessionCoockie \\ 
+          1 & admin & admin123 & sessionCoockie \\
+          2 & user\_1 & 123 & sessionCoockie \\
+          3 & user\_2 & 123 & sessionCoockie \\
           \hline
-        \end{tabular} 
+        \end{tabular}
         \footnotesize
         \caption{SQL table}
       \end{table}
@@ -364,7 +310,7 @@
   \end{lstlisting}
   Wo \$login und \$passwd sind Werte aus dem Formular.
   \newline
-  Dann \"uberpr\"uft den Script ob die Abfragen ein not-null Ergebnis zur\"uckgegeben:
+  Dann \"uberpr\"uft das Script ob die Abfragen ein not-null Ergebnis zur\"uckgegeben:
   \newline
   \begin{lstlisting}[style=PHPStyle]
     $result->num_rows > 0
@@ -372,7 +318,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{SQL Injection - Beispiel}
-  Um das SQL Injection auszunutzen, geben wir in das Name-field {\fboxsep=0pt\colorbox{mGreen!50}{\strut ' OR 0=0 -- }} ein, das Password kann beliebig sein.
+  Um die SQL Injection auszunutzen, geben wir in das Name-field {\fboxsep=0pt\colorbox{mGreen!50}{\strut ' OR 0=0 -- }} ein, das Passwort kann beliebig sein.
   \newline
   Dann wird die Abfrage-Query im Skript so aussehen:
   \newline
@@ -392,8 +338,8 @@
 \begin{frame}[fragile]{Code Injection - Masnahmen}
   Gegenmaßnahmen:
   \begin{itemize}
-    \item Escaping von Userinput (SQL-Metazeichen)
-    \item Ueberprufung von Userinout mit Hilfe von Regular expressions
+    \item Escaping von User-input (SQL-Metazeichen)
+    \item \"Ueberprufung von User-input mit Hilfe von Regular expressions
     \item Gespeicherte Funktionen in Datenbank
   \end{itemize}
 \end{frame}
@@ -405,9 +351,10 @@
 \section{Cross Site Scripting (XSS)}
 
 \begin{frame}[fragile]{Cross Site Scripting - XSS}
-  Bei Cross-Site Scripting (XSS) gelingt es dem Angreifer, seinen Schadcode in eine vermeintlich vertrauenswürdige Umgebung einzubetten.
+  Bei Cross-Site Scripting (XSS) gelingt es dem Angreifer, seinen Schadcode in eine vermeintlich vertrauensw\"urdige Umgebung einzubetten.
   % Bei Cross-Site Scripting (XSS) werden Sicherheitsl\"ucken in Webanwendungen ausgenutzt um schadhaften Code in sonst vertrauensw\"urdigen Websiten einzubinden.
   % Das ist der Fall wenn es Nicht-Vertrauensw\"urdigen Dritten erlaubt ist, Daten und Code hochzuladen.
+  \newline
   \newline
   Ziele:
   \begin{itemize}
@@ -432,7 +379,7 @@
   Wenn diese Eingabe Scriptcode enth\"alt, die vom Browser des Nutzers interpretiert wird, kann dort Schadcode ausgef\"urt werden.
   \newline
   \newline
-  Ein Opfer klickt eine pr\"aparierte URL an, in der sch\"adlicher Code eingef\"ugt ist. Der Server \"ubernimmt diesen Code und generiert eine dynamisch ver\"anderte Webseite. Der Anwender sieht eine vom Angreifer manipulierte Webseite und h\"alt sie für vertrauensw\"urdig. 
+  Ein Opfer klickt eine pr\"aparierte URL an, in der sch\"adlicher Code eingef\"ugt ist. Der Server \"ubernimmt diesen Code und generiert eine dynamisch ver\"anderte Webseite. Der Anwender sieht eine vom Angreifer manipulierte Webseite und h\"alt sie f\"ur vertrauensw\"urdig.
   \newline
   \newline
   Dieser Typ hei{\ss}t auch nicht-persistent, da der Schadcode nur tempor\"ar bei der generierte Webseite existiert.
@@ -441,7 +388,7 @@
 \begin{frame}[fragile]{Cross Site Scripting - reflektierte XSS}
   Beispiel von reflektierte XSS: Suchfunktion.
   \newline
-  Ein korrektes url:
+  Eine korrekte url:
   \begin{lstlisting}[style=CStyle]
     http://example.com/?suche=Suchbegriff
   \end{lstlisting}
@@ -459,7 +406,7 @@
 
 \begin{frame}[fragile]{Cross Site Scripting - Persistente XSS}
   Persistente XSS unterscheidet sich von reflektierenden Angriffen nur dadurch, dass der Schadcode auf dem Server gespeichert wird, wodurch er bei jeder Anfrage ausgef\"urt wird.
-  Ist bei Webanwendungen m\"oglich, die Benutzereingaben serverseitig ohne Pr\"ufung speichern und diese sp\"ater wieder ausliefert. Persistentes XSS ist für den Angreifer eine bevorzugte Methode, da es nicht notwendig ist, den Benutzer dazu zu bringen, auf die gew\"unschte Link zu klicken.
+  Ist bei Webanwendungen m\"oglich, die Benutzereingaben serverseitig ohne Pr\"ufung speichern und diese sp\"ater wieder ausliefert. Persistentes XSS ist f\"ur den Angreifer eine bevorzugte Methode, da es nicht notwendig ist, den Benutzer dazu zu bringen, auf den gew\"unschte Link zu klicken.
   \newline
   Beispiel Posting auf Website:
   \begin{lstlisting}[style=CStyle]
@@ -480,7 +427,7 @@
 
 \begin{frame}[fragile]{Cross Site Scripting - Schutzma{\ss}nahmen}
   \begin{itemize}
-    \item (Client side) Alle empfangene Links kritisch zu prüfen und nicht beliebig aufzurufen
+    \item (Client side) Alle empfangene Links kritisch zu pr\"ufen und nicht beliebig aufzurufen
     \item HTML-Metazeichen durch Zeichenreferenzen ersetzen (escapen), damit sie als normale Zeichen behandelt werden
     \item Input Validation, z.B. mit regular expression
   \end{itemize}
@@ -489,7 +436,7 @@
 \begin{frame}[fragile]{XSS - Beispiel}
   \begin{itemize}
     \item Wir betrachten ein Beispiel, wie man eine User-Session mit Hilfe von XSS ergreifen kann.
-    \item Wir haben ein ganz einfaches Chat-interface und koennen uns mit Hilfe von SQL-Injection als Admin einloggen.
+    \item Wir haben ein ganz einfaches Chat-interface und k\"onnen uns mit Hilfe von SQL-Injection als Admin einloggen.
     \item Ziel: Diebstahl der Benutzersession, so dass es m\"oglich w\"are, in seinem Namen in den Chat zu schreiben
   \end{itemize}
 \end{frame}
@@ -506,8 +453,8 @@
 
 \begin{frame}[fragile]{XSS - Beispiel}
   \begin{itemize}
-    \item Wir verwenden die XSS-Sicherheitsl\"ucke in Form, um unser eigenes Script in die Seite zu integrieren.
-    \item F\"ullen wir das Feld 'new message' wie folgt:
+    \item Wir verwenden die XSS-Sicherheitsl\"ucke im Formular, um unser eigenes Script in die Seite zu integrieren.
+    \item Wir F\"ullen das Feld 'new message' wie folgt:
 
     \begin{lstlisting}[style=PHPStyle]
       Please no Offtop in this thread.
@@ -534,7 +481,7 @@
   \begin{itemize}
     \item Da die Website die Eingabe nicht \"uberpr\"uft, gelangt unser Skript in den Chat.
     \item Ab jetzt sendet jeder Besucher der Seites seine Cookies zum Angreifer.
-    \item Der Angreifer dauert, bis der richtige Benutzer die Seite aufruft.
+    \item Der Angriff dauert, bis der richtige Benutzer die Seite aufruft.
     \item Der Angreifer kann dann in seinem Browser Cookie-Werte ersetzen, so dass die Website ihn als Benutzer nimmt.
   \end{itemize}
 \end{frame}
@@ -666,7 +613,7 @@
         char buffer[20];
         printf("Enter some text:\n");
         scanf("%s", buffer);
-        printf("You entered: %s\n", buffer);    
+        printf("You entered: %s\n", buffer);
     }
 
     int main(){
@@ -692,7 +639,7 @@
   Was k\"onen wir aus dem Assemblercode bestimmen:
 
   \begin{itemize}
-    \item Die Adresse von secretFunction ist 00000000004005d6 in Hex. 
+    \item Die Adresse von secretFunction ist 00000000004005d6 in Hex.
     \begin{lstlisting}[style=C2Style]
       00000000004005d6 <secretFunction>:
     \end{lstlisting}
